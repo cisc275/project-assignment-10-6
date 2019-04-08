@@ -1,4 +1,5 @@
-package birdyRun;
+//package birdyRun;
+
 
 public enum Lane {  // lane enum to dictate position on screen
 	Top("top"),

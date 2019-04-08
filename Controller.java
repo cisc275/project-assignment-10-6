@@ -1,6 +1,6 @@
-package birdyRun;
+//package birdyRun;
 
-public class Controller {
+public class Controller { 
 	private Model model;
 	private View view;
 	

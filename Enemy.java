@@ -1,6 +1,6 @@
-package birdyRun;
+//package birdyRun;
 
-public class Enemy extends Entity{
+public class Enemy extends Entity{ 
 	private String name; // enemies have name, damage value, size and type
 	private int damage;
 	private int xsize;
@@ -9,36 +9,36 @@ public class Enemy extends Entity{
 	
 	
 	public void setXSize(int x) { //getters and setters
-		this.xsize = x;
+		//this.xsize = x;
 	}
 	public int getXSize() {
-		return xsize;
+		return 1;
 	}
 	public void setYSize(int y) { 
-		this.ysize = y;
+		//this.ysize = y;
 	}
 	public int getYSize() {
-		return ysize;
+		return 1;
 	}
 	public void setName(String n) {
-		this.name = n;
+		//this.name = n;
 	}
 	public String getName() {
-		return name;
+		return "";
 	}
 	public void setDamage(int d) {
-		this.damage = d;
+		//this.damage = d;
 	}
 	public int getDamage() {
-		return damage;
+		return 1;
 	}
 	public void setType(String t) {
-		this.type = t;
+		//this.type = t;
 	}
 	public String getType() {
-		return type;
+		return "";
 	}
 	public void attack(Player p) {  // enemies can damage the player
-		p.setHealth(p.getHealth() - this.damage);
+		//p.setHealth(p.getHealth() - this.damage);
 	}
 }

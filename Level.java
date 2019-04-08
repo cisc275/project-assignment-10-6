@@ -1,4 +1,5 @@
-package birdyRun;
+//package birdyRun;
+
 
 public class Level {
 	private Entity[] threats; // Level has threats, player, quiz, map and scroll speed
@@ -38,11 +39,16 @@ public class Level {
 		this.scrollSpeed = scrollSpeed;
 	}
 	public boolean whichBird() {  // returns true if bird is non-migratory
+		/**
 		if (player.getName() == "Red Clipper") {
 			return true;
 		}else {
 			return false;
 		}
+		*/
+		return false;
 	}
-	//public void nestBuild() {}
+	public void nestBuild() {
+		
+	}
 }

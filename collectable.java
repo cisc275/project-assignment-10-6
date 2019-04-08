@@ -1,34 +1,34 @@
-package birdyRun;
+//package birdyRun;
 
-public class collectable {
+public class collectable { 
 	private boolean safe; // collectables have size, nutritional value and safety level
 	private int xsize;
 	private int ysize;
 	private int value;
 	
 	public int getXSize() { // getters and setters
-		return this.xsize;
+		return 1;
 	}
 	public void setXSize(int x) {
-		this.xsize = x;
+		//this.xsize = x;
 	}
 	public boolean getSafe() {
-		return safe;
+		return false;
 	}
 	public void setSafe(boolean s) {
-		this.safe = s;
+		//this.safe = s;
 	}
 	public int getYSize() {
-		return this.ysize;
+		return 1;
 	}
 	public void setYSize(int y) {
-		this.ysize = y;
+		//this.ysize = y;
 	}
 	public int getValue() {
-		return this.value;
+		return 1;
 	}
 	public void setValue(int v) {
-		this.value = v;
+		//this.value = v;
 	}
 	
 }
