@@ -3,7 +3,9 @@
 
 public class Food extends collectable{		//food class for food objects
 	
-	public void regen(collectable c){  //food can increase health
+	public Food() {};
+	public int regen(){ 
+		return 0;//food can increase health
 	}
 
 }

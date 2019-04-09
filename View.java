@@ -8,32 +8,14 @@ public class View {
 	private BufferedImage player;
 	private BufferedImage threat;
 	
-	/**
-	public BufferedImage getBackground() {
-		return background;
-	}
-	*/
-	public void setBackground(BufferedImage background) {
-		//this.background = background;
-	}
-	/**
-	public BufferedImage getPlayer() {
-		return player;
-	}
-	*/
-	public void setPlayer(BufferedImage player) {
-		//this.player = player;
-	}
-	/**
-	public BufferedImage getThreat() {
-		return threat;
-	}
-	*/
-	public void setThreat(BufferedImage threat) {
-		//this.threat = threat;
+	
+	public View() {}
+	public void update(int x, int y) {}
+	private BufferedImage createImage() {
+		BufferedImage img;
+		return img;
 	}
 	
-	public void update(){}
 	public void drawLevel() {}
 	public void backScroll() {}
 	public void death() {}

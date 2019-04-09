@@ -1,6 +1,6 @@
 //package birdyRun;
 
-public class Player extends Entity{
+public class Player {
 	
 	private int health;  // Player has health, score, nest level and danger based on attacker and progress
 	private int score;

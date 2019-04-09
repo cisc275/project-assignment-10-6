@@ -1,6 +1,6 @@
 //package birdyRun;
 
-public class Obstacle extends Enemy{
+public class Obstacle {
 	private int xsize;
 	private int ysize;
 	private String type;
@@ -30,16 +30,5 @@ public class Obstacle extends Enemy{
 	}
 	public String getName() {
 		return "";
-	}
-	public boolean isUpObstacle() {  // returns whether obstacle is on the bottom (false) or not (true)
-		/**
-		Entity e = this;
-		if (e.getCurrentLane() == Lane.Top || e.getCurrentLane() == Lane.Mid) {
-			return true;
-		}else {
-			return false;
-		}
-		*/
-		return false;
 	}
 }
