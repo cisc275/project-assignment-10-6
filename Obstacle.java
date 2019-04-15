@@ -1,34 +1,31 @@
 //package birdyRun;
 
-public class Obstacle {
-	private int xsize;
-	private int ysize;
-	private String type;
-	private String name;
+public class Obstacle extends Sprite {
+	private int obstacleImgHeight;
+	private int obstacleImgWidth;
 	
+	Obstacle(int x, int y) {
+		xloc = x;
+		yloc = y;
+	}
 	
-	public void setXSize(int x) { //getters and setters
-		//this.xsize = x;
+	public int getXloc() { // getters and setters
+		return xloc;
 	}
-	public int getXSize() {
-		return 1;
+	public void setXloc(int x) {
+		xloc = x;
 	}
-	public void setYSize(int y) { 
-		//this.ysize = y;
+
+	public int getYloc() {
+		return yloc;
 	}
-	public int getYSize() {
-		return 1;
+	public void setYloc(int y) {
+		yloc = y;
 	}
-	public void setType(String t) {
-		//this.type = t;
+	public int getImgWidth() {
+		return obstacleImgWidth;
 	}
-	public String getType() {
-		return "";
-	}
-	public void setName(String n) {
-		//this.name = n;
-	}
-	public String getName() {
-		return "";
+	public int getImgHeight() {
+		return obstacleImgHeight;
 	}
 }

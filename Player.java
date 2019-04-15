@@ -1,74 +1,37 @@
 //package birdyRun;
 
-public class Player {
+public class Player extends Sprite{
+	private int playerImgWidth;
+	private int playerImgHeight;
 	
-	private int health;  // Player has health, score, nest level and danger based on attacker and progress
-	private int score;
-	private int nestLevel;
-	private boolean danger;
+	Player(int x, int y) {
+		xloc = x;
+		yloc = y;
+	}
 	
-	public void setHealth(int h) {  // getters and setters 
-		//this.health = h;
+	public int getXloc() { // getters and setters
+		return xloc;
 	}
-	public int getHealth() {  
-		return 1;
+	
+	public void setXloc(int x) {
+		xloc = x;
 	}
-	public void setScore(int s) {
-		//this.score = s;
+
+	public int getYloc() {
+		return yloc;
 	}
-	public int getScore() {
-		return 1;
+	
+	public void setYloc(int y) {
+		yloc = y;
 	}
-	public void setNestLevel(int n) {
-		//this.nestLevel = n;
+	
+	public int getImgWidth() {
+		return playerImgWidth;
 	}
-	public int getNestLevel() {
-		return 1;
+	
+	public int getImgHeight() {
+		return playerImgHeight;
 	}
-	public void setDanger(boolean d) {
-		//this.danger = d;
-	}
-	public boolean getDanger() {
-		return false;
-	}
-	 
-	public void flyup() {  // player can move up lanes
-		/**
-		if (super.getCurrentLane() == Lane.Bottom) {
-			super.setCurrentLane(Lane.Mid);
-		}else {
-			super.setCurrentLane(Lane.Top);
-		}
-		*/
-		
-	}
-	public void flydown() {  // player can move down lanes
-		/**
-		if (super.getCurrentLane() == Lane.Top) {
-			super.setCurrentLane(Lane.Mid);
-		}else {
-			super.setCurrentLane(Lane.Bottom);
-		}
-		*/
-	}
-	public void eat(Food f) {  // player can eat collectables that are food
-		/**
-		if (f.getSafe() == true) {
-			this.health += f.getValue();
-		}else {
-			this.health -= f.getValue();
-		}
-		*/
-	}
-	public void scorer(NestPiece n) { // player can collect nest pieces to increase score and nest level
-		/**
-		if (n.getSafe() == true) {
-			this.score++;
-			this.nestLevel++;
-		}else {
-			this.score--;
-		}
-		*/
-	}
+	
 	
 }

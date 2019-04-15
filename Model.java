@@ -47,6 +47,10 @@ public class Model {
 		nestProgress += 10;
 	}
 	
+	public void quiz() {
+	
+	}
+	
 	public int getX() {
 		return xloc;
 	}
