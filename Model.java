@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.util.Scanner;
+
 //package birdyRun;
 
 
@@ -11,12 +14,49 @@ public class Model {
 	int nestProgress = 0; //How far they have built the nest (0-100%)
 	int energyLevel = 50; //0-100%
 	int levelProgress = 0;
+	Level level;
+	int refRate = 200;
 	
 	Model(int pic, int frame) {
 		picSize = pic;
 		frameStartSize = frame;
+		level = new Level();
 	}
-	
+	public static void main(String[] args) {
+		Model x = new Model(0,0);
+		//Scanner in = new Scanner(System.in);
+		for(int i=0; i < (x.level.length-20);i++) {
+			try{
+				if(System.in.available()>0) {
+					char c = (char)System.in.read();
+					if(c == 'w' || c == 'u')
+						x.level.p.changeLane("w");
+					else if(c == 's' || c == 'd')
+						x.level.p.changeLane("s");
+					else if(!x.level.p.alive && c == 'y') {
+						x.level.reborn();
+					}
+					else if(!x.level.p.alive && c == 'n') {
+						x.level.p.setAlive(true);//1 last frame;
+						System.out.println(x.level);
+						return;
+					}
+					else {}
+				}
+			}catch(IOException e){
+				
+			}
+			System.out.println(x.level);
+			x.level.update();
+			try {
+				Thread.sleep(200);//increase/decrease "speed"
+	    	} catch (InterruptedException e) {
+	    		e.printStackTrace();
+	    	}
+
+
+	}
+	}
 	public int detectCollision() {
 		return 0;
 	}
@@ -57,5 +97,8 @@ public class Model {
 	
 	public int getY() {
 		return yloc;
+	}
+	public String toString() {
+		return level.toString();
 	}
 }

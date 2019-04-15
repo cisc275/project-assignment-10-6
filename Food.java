@@ -6,7 +6,19 @@ public class Food extends Sprite{		//food class for food objects
 	private int foodImgHeight;
 	private int foodImgWidth;
 	
-	food(int x, int y) {
+	Food(){
+		self = '~';
+		int rand  = (int)Math.floor(Math.random()*3);
+		if(rand == 0)
+			lane =Lane.Top;
+		else if(rand==1)
+			lane = Lane.Mid;
+		else
+			lane=Lane.Bottom;
+		xloc = (int)Math.floor(Math.random()*900)+100;
+		
+	}
+	Food(int x, int y) {
 		xloc = x;
 		yloc = y;
 	}
