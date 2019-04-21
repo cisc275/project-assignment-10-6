@@ -1,10 +1,12 @@
 import junit.framework.*;
 public class Tests {
+	@Before
+	public void init() {
+		Model model = new Model();
+		View view = new View();
+	}
+	
 	@Test
-	Model model = new Model();
-	View view = new View();
-	Food food = new Food();;
-	NestPiece nestpiece = new NestPiece();
 	public static void testDetectCollisions() {
 		assertEquals(0, model.detectCollisions());
 		assertEquals(1, model.detectCollisions());
@@ -13,14 +15,21 @@ public class Tests {
 		assertEquals(0, model.move());
 		assertEquals(1, model.move());
 	}
-	public static void testCreatImage() {
-		assertNull(view.createImage());
-		assertNotNull(view.createImage());
-	}
+
 	public static void testRegen() {
-		assertEquals(0, food.move());
-		assertEquals(1, food.move());
+		model.energyLevel = 50;
+		model.regen();
+		assertEquals(52, model.energyLevel);
 	}
+	public static void testFatigue() {
+		model.energyLevel = 50;
+		model.fatigue();
+		assertEquals(49, model.energyLevel);
+	}
+	public static void testBuildNest() {
+		model.nestProgress = 0;
+		model.buildNest();
+		assertEquals(10, model.nestProgress);
 	public static void testMove() {
 		assertEquals(0, nestpiece.move());
 		assertEquals(1, nestpiece.move());
