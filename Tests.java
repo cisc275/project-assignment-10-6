@@ -1,37 +1,40 @@
-import junit.framework.*;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+//import junit.framework.Test;
+
 public class Tests {
-	@Before
-	public void init() {
-		Model model = new Model();
-		View view = new View();
-	}
-	
 	@Test
-	public static void testDetectCollisions() {
-		assertEquals(0, model.detectCollisions());
-		assertEquals(1, model.detectCollisions());
-	}
-	public static void testMove() {
-		assertEquals(0, model.move());
-		assertEquals(1, model.move());
+	public void testDetectCollisions() {
+		Model model = new Model();
+		assertEquals(0, model.detectCollision());
+		assertEquals(1, model.detectCollision());
 	}
 
-	public static void testRegen() {
-		model.energyLevel = 50;
+	@Test
+	public void testRegen() {
+		Model model = new Model();
+		model.setEnergyLevel(50);
 		model.regen();
-		assertEquals(52, model.energyLevel);
+		assertEquals(52, model.getEnergyLevel());
+		assertEquals(45, model.getEnergyLevel());
 	}
-	public static void testFatigue() {
-		model.energyLevel = 50;
+	@Test
+	public void testFatigue() {
+		Model model = new Model();
+		model.setEnergyLevel(50);
 		model.fatigue();
-		assertEquals(49, model.energyLevel);
+		assertEquals(49, model.getEnergyLevel());
+		assertEquals(55, model.getEnergyLevel());
 	}
-	public static void testBuildNest() {
-		model.nestProgress = 0;
+	@Test
+	public void testBuildNest() {
+		Model model = new Model();
+		model.setNestProgress(0);
 		model.buildNest();
-		assertEquals(10, model.nestProgress);
-	public static void testMove() {
-		assertEquals(0, nestpiece.move());
-		assertEquals(1, nestpiece.move());
+		assertEquals(10, model.getNestProgress());
+		assertEquals(1, model.getNestProgress());
 	}
+	
 }

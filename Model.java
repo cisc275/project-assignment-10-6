@@ -17,6 +17,10 @@ public class Model {
 	Level level;
 	int refRate = 200;
 	
+	Model () {
+	
+	}
+	
 	Model(int pic, int frame) {
 		picSize = pic;
 		frameStartSize = frame;
@@ -53,13 +57,14 @@ public class Model {
 	    	} catch (InterruptedException e) {
 	    		e.printStackTrace();
 	    	}
-
-
 	}
 	}
+	
+	
 	public int detectCollision() {
 		return 0;
 	}
+	
 	public void move() {
 		/*if() {
 			yloc += 1;
@@ -100,5 +105,19 @@ public class Model {
 	}
 	public String toString() {
 		return level.toString();
+	}
+	public int getEnergyLevel() {
+		return this.energyLevel;
+	}
+	public void setEnergyLevel(int energy) {
+		this.energyLevel = energy;
+	}
+	
+	public int getNestProgress() {
+		return this.nestProgress;
+	}
+	
+	public void setNestProgress(int prog) {
+		this.nestProgress = prog;
 	}
 }
