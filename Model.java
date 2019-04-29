@@ -1,7 +1,8 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-//package birdyRun;
+//package birdyRun;w
+
 
 
 public class Model {
@@ -16,16 +17,15 @@ public class Model {
 	int levelProgress = 0;
 	Level level;
 	int refRate = 200;
-	
-	Model () {
-	
-	}
+	char correct;
 	
 	Model(int pic, int frame) {
 		picSize = pic;
 		frameStartSize = frame;
 		level = new Level();
+		QuizQ quiz = new QuizQ();
 	}
+	
 	public static void main(String[] args) {
 		Model x = new Model(0,0);
 		//Scanner in = new Scanner(System.in);
@@ -33,15 +33,17 @@ public class Model {
 			try{
 				if(System.in.available()>0) {
 					char c = (char)System.in.read();
+					//char c2 = quiz.ansToLetter();
 					if(c == 'w' || c == 'u')
 						x.level.p.changeLane("w");
 					else if(c == 's' || c == 'd')
 						x.level.p.changeLane("s");
-					else if(!x.level.p.alive && c == 'y') {
+					else if(!x.level.p.alive && c == 'y') { // originally == 'y'
 						x.level.reborn();
 					}
-					else if(!x.level.p.alive && c == 'n') {
-						x.level.p.setAlive(true);//1 last frame;
+					//else if (!x.energyLevel.p.alive && c == quiz.getCorrectLetter())
+					else if(!x.level.p.alive && c != 'n') {// originally == 'n'
+						x.level.p.setAlive(true);//1 last frame; 
 						System.out.println(x.level);
 						return;
 					}
@@ -51,15 +53,15 @@ public class Model {
 				
 			}
 			System.out.println(x.level);
+			
 			x.level.update();
 			try {
-				Thread.sleep(200);//increase/decrease "speed"
+				Thread.sleep(200); // increase/decrease "speed"
 	    	} catch (InterruptedException e) {
 	    		e.printStackTrace();
 	    	}
+		}
 	}
-	}
-	
 	
 	public int detectCollision() {
 		return 0;
@@ -76,8 +78,6 @@ public class Model {
 	public void updateLocationAndDirection() {
 		xloc += xIncr;
 		yloc += yIncr;
-
-
 	}
 	
 	public void regen() {
@@ -87,7 +87,7 @@ public class Model {
 	public void fatigue() {
 		energyLevel -= 1;
 	}
-	
+	/**
 	public void buildNest() {
 		nestProgress += 10;
 	}
@@ -120,4 +120,5 @@ public class Model {
 	public void setNestProgress(int prog) {
 		this.nestProgress = prog;
 	}
+	*/
 }
