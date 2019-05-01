@@ -22,51 +22,69 @@ import java.util.*;
 import javax.swing.JButton;
 import java.awt.event.*;
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
+
 
 
 public class View extends JFrame{
-	public boolean birdType; //Migratory or non-migratory
 	private BufferedImage background;
-	int scrollSpeed = 10;
-	private BufferedImage player;
-	private BufferedImage threat;
-	final int frameCount = 10;
-	int xloc = 100;
-    int yloc = 100;
-    final int xIncr = 1;
-    final int yIncr = 1;
-    int picSize = 165;
-    final int drawDelay = 30; //msec
-	int picNum = 0;
+	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
+	private BufferedImage birdImg;
+	private BufferedImage foodImg;
+	private BufferedImage nestpieceImg;
+	private BufferedImage obstacleImg;
+	private Player bird;
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-	
-	static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
-	JFrame frame = new JFrame("Bird Game");
-	DrawPanel drawPanel = new DrawPanel();
-    Action drawAction;
+	static JFrame frame =  new JFrame("Bird Game");
+	DrawPanel drawPanel;
 	
     public View() {
-    	background = createImage("Images/GameBackground.jpg");
-		frame.add(drawPanel);
+		background = createImage("Images/GameBackground.jpg");
+		birdImg = createImage("Images/2.png");
+		foodImg = createImage("Images/FertilizerMonster.png");
+		obstacleImg = createImage("Images/Wizard.png");
+		nestpieceImg = createImage("Images/house_0003.png");
+		bird = new Player(0, Lane.Mid, birdImg);
+		for (int i = 0; i < 10; i++) { 
+            sprites.add(new NestPiece(i*2000, Lane.Mid, nestpieceImg)); 
+        } 
+		for (int i = 0; i < 50; i++) { 
+            sprites.add(new Food(i*500, Lane.Mid, foodImg)); 
+        } 
+		for (int i = 0; i < 100; i++) { 
+            sprites.add(new Obstacle(i*1000, Lane.Mid, obstacleImg)); 
+        }
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(true);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		drawPanel = new DrawPanel();
+		frame.add(drawPanel);
 		frame.pack();
 		frame.setVisible(true);
     }	
 	
     @SuppressWarnings("serial")
 	private class DrawPanel extends JPanel {
-    	int picNum = 0;
-
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-	    	g.drawImage(background, 0, 0, getWidth(), getHeight(),  this);
+			g.drawImage(background, 0, 0, screenSize.width, screenSize.height,  this);
+			g.drawImage(bird.Image, 0, screenSize.height / 2, bird.getImgWidth(), bird.getImgHeight(),  this);
+			for(Sprite s: sprites) {
+				g.drawImage(s.Image, s.xloc, 0, s.getImgWidth(), s.getImgHeight(),  this);
+			}
 		}
-
 	}
 	
-	public void update(int x, int y) {}
+	public void update(ArrayList<Sprite> s) {
+		sprites = s;
+		try {
+			Thread.sleep(5);//increase/decrease "speed"
+    	} catch (InterruptedException e) {
+    		e.printStackTrace();
+    	}
+		drawPanel.repaint();
+	}
+	
 	private BufferedImage createImage(String img) {
     	BufferedImage bufferedImage;
     	try {
@@ -78,22 +96,17 @@ public class View extends JFrame{
     	return null;
 	}
 	
-
-	
-	public void backScroll() {}
-	public void death() {}
-	public void pop() {}
 	public static void main(String[] args) {
 		Controller a = new Controller();
+		frame.addKeyListener(a);
 		a.start();
-		/*EventQueue.invokeLater(new Runnable(){
-			public void run(){
-				addStopListener(a);
-			}
-		});*/
-	}
-	public int getPicSize() {
-		return picSize;
 	}
 
+	public ArrayList<Sprite> getSprites() {
+		return sprites;
+	}
+	
+	public Player getPlayer() {
+		return bird;
+	}
 }

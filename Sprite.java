@@ -1,28 +1,21 @@
+import java.awt.image.BufferedImage;
 
-public abstract class Sprite {
-	public char self;
+public class Sprite {
 	public int xloc;
-	public int yloc;
 	public Lane lane;
-	public char getSelf() {return self;}
-	public boolean alive;
+	public BufferedImage Image;
+	public String type;
 	
-	Sprite(){
-		this.lane = Lane.Bottom;
-		this.self = 'X';
-	}
-	
-	Sprite(Lane l, char s){
-		this.lane = l;
-		this.self = s;
-	}
-	public void setAlive(boolean a) {this.alive = a;}
-	public Lane getLane() {return this.lane;}
-	public String toString() {
-		return String.valueOf(this.self);
-	}
 	public int getXloc() {
 		return this.xloc;
 	}
-	
+	public Lane getLane() {
+		return this.lane;
+	}
+	public int getImgWidth() {
+		return Image.getWidth();
+	}
+	public int getImgHeight() {
+		return Image.getHeight();
+	}
 }

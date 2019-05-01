@@ -1,83 +1,80 @@
 import java.io.IOException;
 import java.util.Scanner;
-
-//package birdyRun;w
-
+import java.util.*;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
+import java.awt.image.BufferedImage;
+//package birdyRun;
 
 
 public class Model {
-	int picSize;
-	int frameStartSize;
-	int xloc;
-	int yloc;
-	int xIncr = 8;
-    int yIncr = 2;
-	int nestProgress = 0; //How far they have built the nest (0-100%)
-	int energyLevel = 50; //0-100%
-	int levelProgress = 0;
-	Level level;
-	int refRate = 200;
-	char correct;
+	private int nestProgress = 0; //How far they have built the nest (0-100%)
+	private int energyLevel = 50; //0-100%
+	private int levelProgress = 0;
+	ArrayList<Sprite> sprites;
+	Player bird;
 	
-	Model(int pic, int frame) {
-		picSize = pic;
-		frameStartSize = frame;
-		level = new Level();
-		QuizQ quiz = new QuizQ();
+	public Model(ArrayList<Sprite> o, Player b) {
+		sprites = o;
+		bird = b;
 	}
+
+	public void detectCollision() {
+		Iterator<Sprite> itr = sprites.iterator();
+		while (itr.hasNext()) {
+			Sprite I = itr.next();
+		
 	
-	public static void main(String[] args) {
-		Model x = new Model(0,0);
-		//Scanner in = new Scanner(System.in);
-		for(int i=0; i < (x.level.length-20);i++) {
-			try{
-				if(System.in.available()>0) {
-					char c = (char)System.in.read();
-					//char c2 = quiz.ansToLetter();
-					if(c == 'w' || c == 'u')
-						x.level.p.changeLane("w");
-					else if(c == 's' || c == 'd')
-						x.level.p.changeLane("s");
-					else if(!x.level.p.alive && c == 'y') { // originally == 'y'
-						x.level.reborn();
-					}
-					//else if (!x.energyLevel.p.alive && c == quiz.getCorrectLetter())
-					else if(!x.level.p.alive && c != 'n') {// originally == 'n'
-						x.level.p.setAlive(true);//1 last frame; 
-						System.out.println(x.level);
-						return;
-					}
-					else {}
-				}
-			}catch(IOException e){
-				
-			}
-			System.out.println(x.level);
-			
-			x.level.update();
-			try {
-				Thread.sleep(200); // increase/decrease "speed"
-	    	} catch (InterruptedException e) {
-	    		e.printStackTrace();
-	    	}
 		}
 	}
 	
-	public int detectCollision() {
-		return 0;
-	}
+	/*public Area getOutline(Color target, BufferedImage bi) {
+		// construct the GeneralPath
+		GeneralPath gp = new GeneralPath();
+
+		boolean cont = false;
+		int targetRGB = target.getRGB();
+		for (int xx=0; xx<bi.getWidth(); xx++) {
+			for (int yy=0; yy<bi.getHeight(); yy++) {
+				if (bi.getRGB(xx,yy)==targetRGB) {
+					if (cont) {
+						gp.lineTo(xx,yy);
+						gp.lineTo(xx,yy+1);
+						gp.lineTo(xx+1,yy+1);
+						gp.lineTo(xx+1,yy);
+						gp.lineTo(xx,yy);
+					} 	
+					else if (!cont) {
+						gp.moveTo(xx,yy);
+					}
+					cont = true;
+				} 
+				else {
+					cont = false;
+				}
+			}
+			cont = false;
+		}
+		gp.closePath();
+
+		// construct the Area from the GP & return it
+		return new Area(gp);
+	}*/
 	
 	public void move() {
 		/*if() {
-			yloc += 1;
+			Player.setYloc(yloc + 1);
 		else if () {
-			yloc -= 1;
-		}	*/		
+			Player.setYloc(yloc - 1);
+		}	*/			
 	}
 	
-	public void updateLocationAndDirection() {
-		xloc += xIncr;
-		yloc += yIncr;
+	public void updateLocation() {
+		for(Sprite s: sprites) {
+			s.xloc = s.xloc - 8;
+		}
 	}
 	
 	public void regen() {
@@ -87,38 +84,16 @@ public class Model {
 	public void fatigue() {
 		energyLevel -= 1;
 	}
-	/**
+	
 	public void buildNest() {
 		nestProgress += 10;
 	}
 	
-	public void quiz() {
-	
+	public void damage() {
+		energyLevel -= 30;
 	}
 	
-	public int getX() {
-		return xloc;
+	public ArrayList<Sprite> getSprites() {
+		return sprites;
 	}
-	
-	public int getY() {
-		return yloc;
-	}
-	public String toString() {
-		return level.toString();
-	}
-	public int getEnergyLevel() {
-		return this.energyLevel;
-	}
-	public void setEnergyLevel(int energy) {
-		this.energyLevel = energy;
-	}
-	
-	public int getNestProgress() {
-		return this.nestProgress;
-	}
-	
-	public void setNestProgress(int prog) {
-		this.nestProgress = prog;
-	}
-	*/
 }

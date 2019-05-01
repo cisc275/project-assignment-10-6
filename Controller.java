@@ -10,15 +10,17 @@ public class Controller implements KeyListener {
 	
 	public Controller(){
 		view = new View();
+		model = new Model(view.getSprites(), view.getPlayer());
 	}
 	
     //run the simulation
 	public void start(){
 		for(int i = 0; i < 5000; i++) {
-
+			model.updateLocation();
+			view.update(model.getSprites());
 		}
 	}
-		@Override
+	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		if (lastkey != e.getKeyCode()) {
@@ -31,8 +33,6 @@ public class Controller implements KeyListener {
 		}
 		lastkey = e.getKeyCode();
 	}
-	public void keyReleased(KeyEvent e){
-	}
+	public void keyReleased(KeyEvent e){}
 	public void keyTyped(KeyEvent e) {}
-	public void actionPerformed(ActionEvent e) {}
 }
