@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 
 public class Player extends Sprite{
 	
-	Player(int x, Lane l, BufferedImage img) {
+	Player(int x, int y, BufferedImage img) {
 		xloc = x;
-		lane = l;
+		yloc = y;
 		Image = img;
 		type = "Player";
 	}

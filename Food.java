@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 
 public class Food extends Sprite{		//food class for food objects
 	
-	Food(int x, Lane l, BufferedImage img) {
+	Food(int x, int y, BufferedImage img) {
 		xloc = x;
-		lane = l;
+		yloc = y;
 		Image = img;
 		type = "Food";
 	}

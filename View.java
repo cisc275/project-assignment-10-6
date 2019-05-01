@@ -41,19 +41,19 @@ public class View extends JFrame{
 	
     public View() {
 		background = createImage("Images/GameBackground.jpg");
-		birdImg = createImage("Images/2.png");
-		foodImg = createImage("Images/FertilizerMonster.png");
-		obstacleImg = createImage("Images/Wizard.png");
-		nestpieceImg = createImage("Images/house_0003.png");
-		bird = new Player(0, Lane.Mid, birdImg);
+		birdImg = createImage("Images/osprey2d_img.png");
+		foodImg = createImage("Images/food_rfishd.png");
+		obstacleImg = createImage("Images/branchesd-obs.png");
+		nestpieceImg = createImage("Images/crd_nestpiece.png");
+		bird = new Player(0, screenSize.height / 2, birdImg);
 		for (int i = 0; i < 10; i++) { 
-            sprites.add(new NestPiece(i*2000, Lane.Mid, nestpieceImg)); 
+            sprites.add(new NestPiece(i*2000, i, nestpieceImg)); 
         } 
 		for (int i = 0; i < 50; i++) { 
-            sprites.add(new Food(i*500, Lane.Mid, foodImg)); 
+            sprites.add(new Food(i*500, i, foodImg)); 
         } 
 		for (int i = 0; i < 100; i++) { 
-            sprites.add(new Obstacle(i*1000, Lane.Mid, obstacleImg)); 
+            sprites.add(new Obstacle(i*1000, i, obstacleImg)); 
         }
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -68,15 +68,16 @@ public class View extends JFrame{
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(background, 0, 0, screenSize.width, screenSize.height,  this);
-			g.drawImage(bird.Image, 0, screenSize.height / 2, bird.getImgWidth(), bird.getImgHeight(),  this);
+			g.drawImage(bird.Image, bird.xloc, bird.yloc, bird.getImgWidth(), bird.getImgHeight(),  this);
 			for(Sprite s: sprites) {
-				g.drawImage(s.Image, s.xloc, 0, s.getImgWidth(), s.getImgHeight(),  this);
+				g.drawImage(s.Image, s.xloc, s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
 			}
 		}
 	}
 	
-	public void update(ArrayList<Sprite> s) {
+	public void update(ArrayList<Sprite> s, Player b) {
 		sprites = s;
+		bird = b;
 		try {
 			Thread.sleep(5);//increase/decrease "speed"
     	} catch (InterruptedException e) {

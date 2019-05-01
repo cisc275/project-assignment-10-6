@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 
 public class NestPiece extends Sprite { // nest pieces can be collected
 
-	NestPiece(int x, Lane l, BufferedImage img) {
+	NestPiece(int x, int y, BufferedImage img) {
 		xloc = x;
-		lane = l;
+		yloc = y;
 		Image = img;
 		type = "NestPiece";
 	}	

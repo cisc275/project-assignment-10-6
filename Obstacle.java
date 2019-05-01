@@ -3,9 +3,9 @@ import java.awt.image.BufferedImage;
 
 public class Obstacle extends Sprite {
 	
-	Obstacle(int x, Lane l, BufferedImage img) {
+	Obstacle(int x, int y, BufferedImage img) {
 		xloc = x;
-		lane = l;
+		yloc = y;
 		Image = img;
 		type = "Obsacle";
 	}

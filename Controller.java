@@ -17,20 +17,18 @@ public class Controller implements KeyListener {
 	public void start(){
 		for(int i = 0; i < 5000; i++) {
 			model.updateLocation();
-			view.update(model.getSprites());
+			view.update(model.getSprites(), model.getPlayer());
 		}
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
-		if (lastkey != e.getKeyCode()) {
 			if (key == KeyEvent.VK_UP) {
-				model.move();
+				model.move("up");
 			}
 			else if (key == KeyEvent.VK_DOWN) {
-				model.move();
+				model.move("down");
 			}
-		}
 		lastkey = e.getKeyCode();
 	}
 	public void keyReleased(KeyEvent e){}

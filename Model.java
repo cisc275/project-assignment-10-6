@@ -13,8 +13,8 @@ public class Model {
 	private int nestProgress = 0; //How far they have built the nest (0-100%)
 	private int energyLevel = 50; //0-100%
 	private int levelProgress = 0;
-	ArrayList<Sprite> sprites;
-	Player bird;
+	private ArrayList<Sprite> sprites;
+	private Player bird;
 	
 	public Model(ArrayList<Sprite> o, Player b) {
 		sprites = o;
@@ -63,13 +63,15 @@ public class Model {
 		return new Area(gp);
 	}*/
 	
-	public void move() {
-		/*if() {
-			Player.setYloc(yloc + 1);
-		else if () {
-			Player.setYloc(yloc - 1);
-		}	*/			
+	public void move(String x) {
+		if(x.equals("up")) {
+			bird.yloc = bird.yloc - 2;
+		}
+		else if (x.equals("down")) {
+			bird.yloc = bird.yloc + 2;
+		}		
 	}
+	
 	
 	public void updateLocation() {
 		for(Sprite s: sprites) {
@@ -95,5 +97,9 @@ public class Model {
 	
 	public ArrayList<Sprite> getSprites() {
 		return sprites;
+	}
+	
+	public Player getPlayer() {
+		return bird;
 	}
 }
