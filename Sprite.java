@@ -1,8 +1,8 @@
 import java.awt.image.BufferedImage;
 
 public class Sprite {
-	public int xloc;
-	public int yloc;
+	public double xloc;
+	public double yloc;
 	public BufferedImage Image;
 	public String type;
 	

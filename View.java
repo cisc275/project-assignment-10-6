@@ -22,7 +22,6 @@ import java.util.*;
 import javax.swing.JButton;
 import java.awt.event.*;
 import java.awt.BorderLayout;
-import java.awt.Rectangle;
 
 
 
@@ -30,11 +29,9 @@ public class View extends JFrame{
 	private BufferedImage background;
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private BufferedImage birdImg;
-	private BufferedImage foodImg;
-	private BufferedImage nestpieceImg;
-	private BufferedImage obstacleImg;
 	private Player bird;
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private ArrayList<BufferedImage> imgs = new ArrayList<>();
 
 	static JFrame frame =  new JFrame("Bird Game");
 	DrawPanel drawPanel;
@@ -42,19 +39,10 @@ public class View extends JFrame{
     public View() {
 		background = createImage("Images/GameBackground.jpg");
 		birdImg = createImage("Images/osprey2d_img.png");
-		foodImg = createImage("Images/food_rfishd.png");
-		obstacleImg = createImage("Images/branchesd-obs.png");
-		nestpieceImg = createImage("Images/crd_nestpiece.png");
+		imgs.add(createImage("Images/food_rfishd.png"));
+		imgs.add(createImage("Images/branchesd-obs.png"));
+		imgs.add(createImage("Images/crd_nestpiece.png"));
 		bird = new Player(0, screenSize.height / 2, birdImg);
-		for (int i = 0; i < 10; i++) { 
-            sprites.add(new NestPiece(i*2000, i, nestpieceImg)); 
-        } 
-		for (int i = 0; i < 50; i++) { 
-            sprites.add(new Food(i*500, i, foodImg)); 
-        } 
-		for (int i = 0; i < 100; i++) { 
-            sprites.add(new Obstacle(i*1000, i, obstacleImg)); 
-        }
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		drawPanel = new DrawPanel();
@@ -68,9 +56,9 @@ public class View extends JFrame{
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(background, 0, 0, screenSize.width, screenSize.height,  this);
-			g.drawImage(bird.Image, bird.xloc, bird.yloc, bird.getImgWidth(), bird.getImgHeight(),  this);
+			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, birdImg.getWidth(), birdImg.getHeight(),  this);
 			for(Sprite s: sprites) {
-				g.drawImage(s.Image, s.xloc, s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
+				g.drawImage(s.Image, (int)s.xloc, (int)s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
 			}
 		}
 	}
@@ -109,5 +97,13 @@ public class View extends JFrame{
 	
 	public Player getPlayer() {
 		return bird;
+	}
+	
+	public Dimension getScreenSize() {
+		return screenSize;
+	}
+	
+	public ArrayList<BufferedImage> getImgs() {
+		return imgs;
 	}
 }

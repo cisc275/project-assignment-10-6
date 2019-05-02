@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 
 public class Obstacle extends Sprite {
 	
-	Obstacle(int x, int y, BufferedImage img) {
+	Obstacle(double x, double y, BufferedImage img) {
 		xloc = x;
 		yloc = y;
 		Image = img;
