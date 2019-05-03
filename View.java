@@ -1,5 +1,3 @@
-//package birdyRun;
-
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
 import java.awt.image.BufferedImage;
@@ -8,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame.*;
 import java.io.File;
@@ -22,27 +21,47 @@ import java.util.*;
 import javax.swing.JButton;
 import java.awt.event.*;
 import java.awt.BorderLayout;
-
-
+import java.awt.Rectangle;
+import java.awt.Image;
 
 public class View extends JFrame{
 	private BufferedImage background;
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private BufferedImage birdImg;
+	private BufferedImage foodImg;
+	private BufferedImage nestpieceImg;
+	private BufferedImage obstacleImg;
 	private Player bird;
-	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	private ArrayList<BufferedImage> imgs = new ArrayList<>();
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 	static JFrame frame =  new JFrame("Bird Game");
 	DrawPanel drawPanel;
 	
     public View() {
-		background = createImage("Images/GameBackground.jpg");
-		birdImg = createImage("Images/osprey2d_img.png");
-		imgs.add(createImage("Images/food_rfishd.png"));
-		imgs.add(createImage("Images/branchesd-obs.png"));
-		imgs.add(createImage("Images/crd_nestpiece.png"));
+    	
+    	// public BufferedImage resize(BufferedImage img, int newW, int newH) { 
+    	
+    	
+    	background = createImage("src/Images/GameBackground.jpg");
+    	
+    	birdImg = createImage("src/Images/clapper_raild.png");
+    	birdImg = resize(birdImg, 200, 200);
+    	foodImg = createImage("src/Images/food_bfish.png");
+    	foodImg = resize(foodImg, 100, 100);
+    	obstacleImg= createImage("src/Images/branchesd-obs.png");
+    	obstacleImg = resize(obstacleImg, 100, 100);
+    	nestpieceImg = createImage("src/Images/crd_nestpiece.png");
+    	nestpieceImg = resize(nestpieceImg, 100, 100);
 		bird = new Player(0, screenSize.height / 2, birdImg);
+		for (int i = 0; i < 10; i++) { 
+            sprites.add(new NestPiece(i*2000, i, nestpieceImg)); 
+        } 
+		for (int i = 0; i < 50; i++) { 
+            sprites.add(new Food(i*500, i, foodImg)); 
+        } 
+		for (int i = 0; i < 100; i++) { 
+            sprites.add(new Obstacle(i*1000, i, obstacleImg)); 
+        }
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		drawPanel = new DrawPanel();
@@ -51,14 +70,23 @@ public class View extends JFrame{
 		frame.setVisible(true);
     }	
 	
+    private static BufferedImage resize(BufferedImage img, int height, int width) {
+        Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resized.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return resized;
+    }
+	
     @SuppressWarnings("serial")
 	private class DrawPanel extends JPanel {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(background, 0, 0, screenSize.width, screenSize.height,  this);
-			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, birdImg.getWidth(), birdImg.getHeight(),  this);
+			g.drawImage(bird.Image, bird.xloc, bird.yloc, bird.getImgWidth(), bird.getImgHeight(),  this);
 			for(Sprite s: sprites) {
-				g.drawImage(s.Image, (int)s.xloc, (int)s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
+				g.drawImage(s.Image, s.xloc, s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
 			}
 		}
 	}
@@ -97,13 +125,5 @@ public class View extends JFrame{
 	
 	public Player getPlayer() {
 		return bird;
-	}
-	
-	public Dimension getScreenSize() {
-		return screenSize;
-	}
-	
-	public ArrayList<BufferedImage> getImgs() {
-		return imgs;
 	}
 }
