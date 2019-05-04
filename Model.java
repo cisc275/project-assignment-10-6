@@ -17,6 +17,7 @@ public class Model {
 	private boolean birdDead = false;
 	private Dimension screenSize;
 	private ArrayList<BufferedImage> imgs = new ArrayList<>();
+	private double yIncr = 0.0;
 	
 	public Model(Dimension bounds, Player b, ArrayList<BufferedImage> a) {
 		screenSize = bounds;
@@ -86,11 +87,14 @@ public class Model {
 	
 	public void move(String x) {
 		if(x.equals("up")) {
-			bird.yloc = bird.yloc - 16;
+			yIncr = -4.0;
 		}
 		else if (x.equals("down")) {
-			bird.yloc = bird.yloc + 16;
+			yIncr = 4.0;
 		}		
+		else if (x.equals("stop")) {
+			yIncr = 0.0;
+		}
 	}
 	
 	public boolean isBirdDead() {
@@ -99,17 +103,34 @@ public class Model {
 	
 	public void spawnObjects() {
 		if(!birdDead) {
-			for(int i = 0; i < 10; i++) {
-				sprites.add(new Food((double)(screenSize.width + (i*500)), (double)(screenSize.height / 2), imgs.get(0))); 
+			for(int i = 0; i < 15; i++) {
+				sprites.add(new Food(randX(), randY(), imgs.get(0))); 
+			}
+			for(int i = 0; i < 7; i++) {
+				sprites.add(new Obstacle(randX(), randY(), imgs.get(1))); 
 			}
 			for(int i = 0; i < 5; i++) {
-				sprites.add(new Obstacle((double)(screenSize.width + (i*200)), (double)(screenSize.height / 3), imgs.get(1))); 
+				sprites.add(new NestPiece(randX(), randY(), imgs.get(2))); 
 			}
-			sprites.add(new NestPiece((double)(screenSize.width + 20), (double)(screenSize.height / 4), imgs.get(2))); 
 		}
 	}
 	
+	public double randY() { 
+		List<Double> yValue = new ArrayList<>(); 
+		yValue.add((double)(screenSize.height / 4));
+		yValue.add((double)((screenSize.height * 2) / 4));
+		yValue.add((double)((screenSize.height * 3) / 4));
+		yValue.add(0.0);
+        Random rand = new Random(); 
+        return yValue.get(rand.nextInt(yValue.size())); 
+    } 
+	
+	public double randX() {
+		return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + screenSize.width;
+	}
+	
 	public void updateLocation() {
+		bird.yloc += yIncr;
 		if(!sprites.isEmpty()) {
 			Iterator<Sprite> itr = sprites.iterator();
 			while(itr.hasNext()) {
