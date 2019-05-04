@@ -10,5 +10,4 @@ public class Food extends Sprite{		//food class for food objects
 		Image = img;
 		type = "Food";
 	}
-	
 }

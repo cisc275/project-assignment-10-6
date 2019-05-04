@@ -11,8 +11,6 @@ import java.awt.Dimension;
 
 
 public class Model {
-	private int nestProgress = 0; //How far they have built the nest (0-100%)
-	private int energyLevel = 50; //0-100%
 	private int levelProgress = 0;
 	private ArrayList<Sprite> sprites = new ArrayList<>();
 	private Player bird;
@@ -34,7 +32,18 @@ public class Model {
 			Rectangle p = new Rectangle((int)bird.xloc,(int)bird.yloc,bird.getImgWidth(),bird.getImgHeight());
 			if (o.intersects(p)) {
 				if (isPixelCollide(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
-					itr.remove();
+					if (s.type.equals("Food")) {
+						bird.regen();
+						itr.remove();
+					}
+					else if (s.type.equals("NestPiece")) {
+						bird.buildNest();
+						itr.remove();
+					}
+					else if (s.type.equals("Obstacle")) {
+						bird.damage();
+						itr.remove();
+					}
 				}
 			}
 		}
@@ -77,10 +86,10 @@ public class Model {
 	
 	public void move(String x) {
 		if(x.equals("up")) {
-			bird.yloc = bird.yloc - 8;
+			bird.yloc = bird.yloc - 16;
 		}
 		else if (x.equals("down")) {
-			bird.yloc = bird.yloc + 8;
+			bird.yloc = bird.yloc + 16;
 		}		
 	}
 	
@@ -115,22 +124,6 @@ public class Model {
 		else {
 			spawnObjects();
 		}
-	}
-	
-	public void regen() {
-		energyLevel += 2;
-	}
-	
-	public void fatigue() {
-		energyLevel -= 1;
-	}
-	
-	public void buildNest() {
-		nestProgress += 10;
-	}
-	
-	public void damage() {
-		energyLevel -= 30;
 	}
 	
 	public ArrayList<Sprite> getSprites() {

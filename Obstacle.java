@@ -7,7 +7,7 @@ public class Obstacle extends Sprite {
 		xloc = x;
 		yloc = y;
 		Image = img;
-		type = "Obsacle";
+		type = "Obstacle";
 	}
 	
 }
