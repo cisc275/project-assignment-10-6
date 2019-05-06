@@ -111,16 +111,12 @@ public class View extends JFrame{
 	
    public void displayQuiz() {
 	   
-	   JOptionPane.showMessageDialog(frame, new QuizQ());
-	   //View quiz = new View();
-       //JFrame frames = new JFrame("Quiz");
-       JLabel jlabel = new JLabel("QUIZ");
-       frame.add(jlabel);
-       //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-      // frame.add(quiz); // add main JPanel to JFrame
-      // frame.pack();
-      // frame.setLocationByPlatform(true);
-       //frame.setVisible(true);
+	   QuizQ q = new QuizQ();
+	   Answers[] options = q.getArrayAns();
+	   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
+			   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+			   null, q.getArrayAns(), options[q.getCorrectNum()]);
+	  
    }
     
    

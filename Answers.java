@@ -26,4 +26,5 @@ public class Answers {
 	public char getLetter() {
 		return (this.letter);
 	}
+	
 }

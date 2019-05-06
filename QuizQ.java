@@ -29,6 +29,16 @@ public class QuizQ {
 		return this.correctLetter;
 	}
 	
+	public int getCorrectNum() {
+		int return_val = 0;
+		for (int i = 0; i < 4; i++) {
+			if (allAns[correctNum][i].isCorrect()) {
+				return_val = i;
+			}
+		}
+		return return_val;
+	}
+	
 	// this method will choose a random question and print it to the screen
 	public int chooseQ() {
 		
