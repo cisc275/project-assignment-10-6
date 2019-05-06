@@ -27,7 +27,11 @@ import java.awt.Toolkit;
 public class View extends JFrame{
 	
 	private BufferedImage background;
-	private BufferedImage miniMap;
+	public int backx;
+	public int backspeed=6;	//match to sprite scroll speed
+	private BufferedImage minimap;
+	public int mapblipx;
+	public int mapblipy;
 	
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private Player bird;
@@ -35,7 +39,7 @@ public class View extends JFrame{
 	private BufferedImage birdImg;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private ArrayList<BufferedImage> imgs = new ArrayList<>();
-	State state;
+	//State state;
 	
 	static JFrame frame =  new JFrame("Bird Game");
 	DrawPanel drawPanel;
@@ -43,27 +47,30 @@ public class View extends JFrame{
 	JProgressBar nestBar;
 	
 	public View() {
-		background = createImage("src/Images/GameBackground.jpg");
-		birdImg = createImage("src/Images/Clapper_Raild_run.png");
+		background = createImage("Images/GameBackground.jpg");
+		backx = 0;
+		birdImg = createImage("Images/osprey2d_img.png");
 	   	birdImg = resize(birdImg, 200, 200);
-	   	BufferedImage foodImg = createImage("src/Images/food_bfish.png");
+	   	BufferedImage foodImg = createImage("Images/food_bfish.png");
 	   	foodImg = resize(foodImg, 100, 100);
-	   	BufferedImage obstacleImg= createImage("src/Images/branchesd-obs.png");
+	   	BufferedImage obstacleImg= createImage("Images/branchesd-obs.png");
 	   	obstacleImg = resize(obstacleImg, 100, 100);
-	   	BufferedImage nestpieceImg = createImage("src/Images/crd_nestpiece.png");
+	   	BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
-	   	
+		minimap = createImage("Images/mini.jpg");
+	   	mapblipx = screenSize.width - 130;
+		mapblipy = screenSize.height - 60;
 	   	
 		imgs.add(foodImg);
 		imgs.add(obstacleImg);
 		imgs.add(nestpieceImg);
-		bird = new Player(0, screenSize.height / 2, birdImg);
+		bird = new Player(screenSize.width / 10, screenSize.height / 2, birdImg);
 		energyBar = new JProgressBar(0, 100);
 		nestBar = new JProgressBar(0, 100);
 		energyBar.setValue(bird.energyLevel);
 		nestBar.setValue(0);
-        energyBar.setStringPainted(true); 
-        nestBar.setStringPainted(true);
+      		energyBar.setStringPainted(true); 
+        	nestBar.setStringPainted(true);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -80,11 +87,17 @@ public class View extends JFrame{
 	private class DrawPanel extends JPanel {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			g.drawImage(background, 0, 0, screenSize.width, screenSize.height,  this);
+			g.drawImage(background, backx, 0, screenSize.width, screenSize.height,  this);
+			g.drawImage(background, backx+screenSize.width, 0, screenSize.width, screenSize.height,  this);
+			if(backx % screenSize.width == 0)
+				backx = 0;
 			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, birdImg.getWidth(), birdImg.getHeight(),  this);
 			for(Sprite s: sprites) {
 				g.drawImage(s.Image, (int)s.xloc, (int)s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
 			}
+			g.drawImage(minimap, screenSize.width -260, screenSize.height - 375, 260, 314, this);
+			g.setColor(Color.RED);
+			g.fillOval(mapblipx, mapblipy, 15, 15);
 		}
 	}
    
@@ -93,7 +106,12 @@ public class View extends JFrame{
 		bird = b;
 		energyBar.setValue(bird.energyLevel);
 		nestBar.setValue(bird.nestProgress);
-
+		if(backx == -12){
+			mapblipy -=10;
+			mapblipx += 3;
+		}
+		backx -= backspeed;
+		
 		
 		try {
 			Thread.sleep(15); //increase/decrease "speed"
