@@ -170,7 +170,7 @@ public class Model {
 			Iterator<Sprite> itr = sprites.iterator();
 			while(itr.hasNext()) {
 				Sprite s = itr.next();
-				s.xloc = s.xloc - 6; //match to background scroll speed
+				s.xloc = s.xloc - 7; //match to background scroll speed
 				if (s.xloc < -100) {
 					itr.remove();
 				}

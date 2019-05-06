@@ -28,7 +28,7 @@ public class View extends JFrame{
 	
 	private BufferedImage background;
 	public int backx;
-	public int backspeed=6;	//match to sprite scroll speed
+	public int backspeed;	//match to sprite scroll speed
 	private BufferedImage minimap;
 	public int mapblipx;
 	public int mapblipy;
@@ -60,6 +60,7 @@ public class View extends JFrame{
 		minimap = createImage("Images/mini.jpg");
 	   	mapblipx = screenSize.width - 130;
 		mapblipy = screenSize.height - 60;
+		backspeed = 6;
 	   	
 		imgs.add(foodImg);
 		imgs.add(obstacleImg);
@@ -89,7 +90,7 @@ public class View extends JFrame{
 			super.paintComponent(g);
 			g.drawImage(background, backx, 0, screenSize.width, screenSize.height,  this);
 			g.drawImage(background, backx+screenSize.width, 0, screenSize.width, screenSize.height,  this);
-			if(backx % screenSize.width == 0)
+			if(backx <= 0 - screenSize.width)
 				backx = 0;
 			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, birdImg.getWidth(), birdImg.getHeight(),  this);
 			for(Sprite s: sprites) {
@@ -104,9 +105,10 @@ public class View extends JFrame{
     public void update(ArrayList<Sprite> s, Player b) {
 		sprites = s;
 		bird = b;
+
 		energyBar.setValue(bird.energyLevel);
 		nestBar.setValue(bird.nestProgress);
-		if(backx == -12){
+		if(backx == -backspeed){
 			mapblipy -=10;
 			mapblipx += 3;
 		}
@@ -117,8 +119,9 @@ public class View extends JFrame{
 			Thread.sleep(15); //increase/decrease "speed"
 	   	} 
 		catch (InterruptedException e) {
-	    	e.printStackTrace();
-	    }
+	    		e.printStackTrace();
+	   	 }
+
 		drawPanel.repaint();
 		
 		if (b.isDead()) {
