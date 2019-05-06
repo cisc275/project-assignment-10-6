@@ -86,6 +86,7 @@ public class Model {
 	}
 	
 	public void move(String x) {
+		
 		if(x.equals("up")) {
 			yIncr = -4.0;
 		}
@@ -95,14 +96,15 @@ public class Model {
 		else if (x.equals("stop")) {
 			yIncr = 0.0;
 		}
-	}
-	
-	public boolean isBirdDead() {
-		return false;
+		
 	}
 	
 	public void spawnObjects() {
-		if(!birdDead) {
+		if(!bird.isDead()) {
+
+			levelProgress++;
+			System.out.println("Level progress: " + levelProgress);
+			
 			for(int i = 0; i < 15; i++) {
 				sprites.add(new Food(randX(), randY(), imgs.get(0))); 
 			}
@@ -144,6 +146,11 @@ public class Model {
 		}
 		else {
 			spawnObjects();
+		}
+		
+		if (bird.isDead()) {
+			QuizQ quiz = new QuizQ();
+			System.out.println("Working from model");
 		}
 	}
 	

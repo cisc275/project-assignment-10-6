@@ -1,10 +1,13 @@
-//package birdyRun;
 import java.util.*;
+
+import javax.swing.JTextArea;
+
 import java.awt.image.BufferedImage;
 
 public class Player extends Sprite{
 	public int nestProgress = 0; //How far they have built the nest (0-100%)
 	public int energyLevel = 50; //0-100%
+	//public QuizQ quiz;
 	
 	Player(double x, double y, BufferedImage img) {
 		xloc = x;
@@ -36,5 +39,18 @@ public class Player extends Sprite{
 	
 	public void fatigue() {
 		energyLevel -= 1;
+	}
+	
+	public boolean isDead() {
+		if (energyLevel == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public void resetDeath () {
+		energyLevel = 50;
 	}
 }

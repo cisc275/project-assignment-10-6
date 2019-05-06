@@ -1,12 +1,15 @@
 import java.util.*;
 //package birdyRun;
 
+import javax.swing.JTextArea;
+
 public class QuizQ {
 	
 	private String question; // quizzes have questions, answers and wrong choices
 	public String answer;
 	public char correctLetter;
 	private int correctNum;
+
 	
 	// Array of answers for each question
 	Answers[] a0 = new Answers[] {new Answers(false, "ONE", '1'), new Answers(true, "TWO T",'2'), new Answers(false, "THREE",'3'), new Answers(false, "FOUR",'4')};
@@ -33,6 +36,7 @@ public class QuizQ {
 		Random rand = new Random();
 		int nextNum = rand.nextInt(6); // choose a random number from 0-5 to be the question number to be asked
 		System.out.println("Question Number " + nextNum);
+		System.out.println("IN QUIZ");
 		// avoid asking the same question twice in a row; check to see if previous question # is the same as this next one
 		//while (correctNum == nextNum) {
 		//	nextNum = (int)(Math.random() % 5);
@@ -56,6 +60,20 @@ public class QuizQ {
 		return ansNum;
 	}
 	public String toString() {
+		return this.question;
+	}
+	
+	public void printChoices() {
+		for (int i = 0; i < 4; i++) {
+			System.out.println(allAns[correctNum][i].getAns());
+		}
+	}
+	
+	public Answers[] getArrayAns() {
+		return allAns[getCorrectAns(correctNum)];
+	}
+	
+	public String getQuestion() {
 		return (this.question);
 	}
 	

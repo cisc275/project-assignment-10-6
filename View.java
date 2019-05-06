@@ -1,8 +1,13 @@
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.border.LineBorder;
 
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -10,7 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -19,13 +26,16 @@ import java.awt.Toolkit;
 	
 public class View extends JFrame{
 	
-	
 	private BufferedImage background;
+	private BufferedImage miniMap;
+	
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private Player bird;
+	private QuizQ quiz;
 	private BufferedImage birdImg;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private ArrayList<BufferedImage> imgs = new ArrayList<>();
+	State state;
 	
 	static JFrame frame =  new JFrame("Bird Game");
 	DrawPanel drawPanel;
@@ -33,15 +43,16 @@ public class View extends JFrame{
 	JProgressBar nestBar;
 	
 	public View() {
-		background = createImage("Images/GameBackground.jpg");
-		birdImg = createImage("Images/clapper_raild_run.png");
+		background = createImage("src/Images/GameBackground.jpg");
+		birdImg = createImage("src/Images/Clapper_Raild_run.png");
 	   	birdImg = resize(birdImg, 200, 200);
-	   	BufferedImage foodImg = createImage("Images/food_bfish.png");
+	   	BufferedImage foodImg = createImage("src/Images/food_bfish.png");
 	   	foodImg = resize(foodImg, 100, 100);
-	   	BufferedImage obstacleImg= createImage("Images/branchesd-obs.png");
+	   	BufferedImage obstacleImg= createImage("src/Images/branchesd-obs.png");
 	   	obstacleImg = resize(obstacleImg, 100, 100);
-	   	BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
+	   	BufferedImage nestpieceImg = createImage("src/Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
+	   	
 	   	
 		imgs.add(foodImg);
 		imgs.add(obstacleImg);
@@ -52,7 +63,7 @@ public class View extends JFrame{
 		energyBar.setValue(bird.energyLevel);
 		nestBar.setValue(0);
         energyBar.setStringPainted(true); 
-        nestBar.setStringPainted(true); 
+        nestBar.setStringPainted(true);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -62,6 +73,7 @@ public class View extends JFrame{
 		frame.add(drawPanel);
 		frame.pack();
 		frame.setVisible(true);
+		
 	}
 
 	@SuppressWarnings("serial")
@@ -82,15 +94,36 @@ public class View extends JFrame{
 		energyBar.setValue(bird.energyLevel);
 		nestBar.setValue(bird.nestProgress);
 
+		
 		try {
-			Thread.sleep(5);//increase/decrease "speed"
+			Thread.sleep(15); //increase/decrease "speed"
 	   	} 
 		catch (InterruptedException e) {
 	    	e.printStackTrace();
 	    }
 		drawPanel.repaint();
+		
+		if (b.isDead()) {
+			displayQuiz();
+			b.resetDeath();
+		}
 	}
 	
+   public void displayQuiz() {
+	   
+	   JOptionPane.showMessageDialog(frame, new QuizQ());
+	   //View quiz = new View();
+       //JFrame frames = new JFrame("Quiz");
+       JLabel jlabel = new JLabel("QUIZ");
+       frame.add(jlabel);
+       //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      // frame.add(quiz); // add main JPanel to JFrame
+      // frame.pack();
+      // frame.setLocationByPlatform(true);
+       //frame.setVisible(true);
+   }
+    
+   
 	private BufferedImage createImage(String img) {
     	BufferedImage bufferedImage;
     	try {
@@ -117,7 +150,6 @@ public class View extends JFrame{
 		return bird;
 	}
 	
- 
 	private static BufferedImage resize(BufferedImage img, int height, int width) {
 		Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
