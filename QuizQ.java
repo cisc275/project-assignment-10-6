@@ -122,4 +122,18 @@ public class QuizQ {
 		return r;
 	}
 	*/
+/*Questions
+ * 1) Ospery like to eat: a. seeds b. crabs ansc.(fish) d.meat
+ * Clapper Rail like to eat: a. candy b. insects ansc. crabs d. fruit
+ * 2)Ospery live in what kind of habitat?
+ * ansa. near shallow bodies of water b. near cities c. on mountains d. in swamps
+ * Clapper Rail. . .?
+ * ansa. in saltmarshes b. on mountains c. near shallow bodies of water d. near cities
+ * 3)Ospery usually travel by: a. walking ansb. flying c. swimming d. jumping
+ * Clapper Rail . . .: a. flying ansb. on ground c. jumping d. swimming
+ * 4)Ospery like to build their nest out of: a. steel b. foam c. soil ansd. sticks
+ * Clapper Rail . . .: a. steel b. foam c. soil ansd. sticks  
+ * 5)Ospery are what kind of bird? ansa. migratory b. nonmigratory c. both d. neither
+ * Clapper Rail . . .? ansa. nonmigratory b. migratory c. both d. neither
+ */
 }
