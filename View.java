@@ -41,14 +41,15 @@ public class View extends JFrame{
 	private ArrayList<BufferedImage> imgs = new ArrayList<>();
 	//State state;
 	
-	static JFrame frame =  new JFrame("Bird Game");
-	DrawPanel drawPanel;
+	JFrame frame =  new JFrame("Bird Game");
+	JButton start = new JButton("Start");
+	static DrawPanel drawPanel;
+	MenuPanel menuPanel;
 	JProgressBar energyBar;
 	JProgressBar nestBar;
 	
 	public View() {
 		background = createImage("Images/GameBackground.jpg");
-		backx = 0;
 		birdImg = createImage("Images/osprey2d_img.png");
 	   	birdImg = resize(birdImg, 200, 200);
 	   	BufferedImage foodImg = createImage("Images/food_bfish.png");
@@ -58,34 +59,25 @@ public class View extends JFrame{
 	   	BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
 		minimap = createImage("Images/mini.jpg");
-	   	mapblipx = screenSize.width - 130;
-		mapblipy = screenSize.height - 60;
-		backspeed = 6;
 	   	
 		imgs.add(foodImg);
 		imgs.add(obstacleImg);
 		imgs.add(nestpieceImg);
 		bird = new Player(screenSize.width / 10, screenSize.height / 2, birdImg);
-		energyBar = new JProgressBar(0, 100);
-		nestBar = new JProgressBar(0, 100);
-		energyBar.setValue(bird.energyLevel);
-		nestBar.setValue(0);
-      		energyBar.setStringPainted(true); 
-        	nestBar.setStringPainted(true);
+		
+		menuPanel = new MenuPanel();
+		drawPanel = new DrawPanel();
+		menuPanel.add(start);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		drawPanel = new DrawPanel();
-		drawPanel.add(energyBar);
-		drawPanel.add(nestBar);
-		frame.add(drawPanel);
+		frame.add(menuPanel);
 		frame.pack();
 		frame.setVisible(true);
-		
 	}
 
 	@SuppressWarnings("serial")
-	private class DrawPanel extends JPanel {
+	public class DrawPanel extends JPanel {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(background, backx, 0, screenSize.width, screenSize.height,  this);
@@ -101,6 +93,13 @@ public class View extends JFrame{
 			g.fillOval(mapblipx, mapblipy, 15, 15);
 		}
 	}
+	
+	@SuppressWarnings("serial")
+	public class MenuPanel extends JPanel {
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+		}
+	}
    
     public void update(ArrayList<Sprite> s, Player b) {
 		sprites = s;
@@ -108,6 +107,7 @@ public class View extends JFrame{
 
 		energyBar.setValue(bird.energyLevel);
 		nestBar.setValue(bird.nestProgress);
+		
 		if(backx == -backspeed){
 			mapblipy -=10;
 			mapblipx += 3;
@@ -115,12 +115,6 @@ public class View extends JFrame{
 		backx -= backspeed;
 		
 		
-		try {
-			Thread.sleep(15); //increase/decrease "speed"
-	   	} 
-		catch (InterruptedException e) {
-	    		e.printStackTrace();
-	   	 }
 
 		drawPanel.repaint();
 		
@@ -137,7 +131,6 @@ public class View extends JFrame{
 	   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
 			   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 			   null, q.getArrayAns(), options[q.getCorrectNum()]);
-	  
    }
     
    
@@ -155,8 +148,6 @@ public class View extends JFrame{
 	
 	public static void main(String[] args) {
 		Controller a = new Controller();
-		frame.addKeyListener(a);
-		a.start();
 	}
 	
 	public ArrayList<Sprite> getSprites() {
@@ -178,6 +169,28 @@ public class View extends JFrame{
 
 	public Dimension getScreenSize() {
 		return screenSize;
+	}
+	
+	public void removeMenu() {
+		backx = 0;
+		mapblipx = screenSize.width - 130;
+		mapblipy = screenSize.height - 60;
+		backspeed = 6;
+		energyBar = new JProgressBar(0, 100);
+		nestBar = new JProgressBar(0, 100);
+		energyBar.setValue(bird.energyLevel);
+		nestBar.setValue(0);
+      	energyBar.setStringPainted(true); 
+        nestBar.setStringPainted(true);
+		frame.remove(menuPanel);
+		drawPanel.add(energyBar);
+		drawPanel.add(nestBar);
+		frame.add(drawPanel);
+		drawPanel.requestFocusInWindow();
+		drawPanel.requestFocus();
+		frame.invalidate();
+		frame.validate();
+		frame.repaint();
 	}
 
 	public ArrayList<BufferedImage> getImgs() {

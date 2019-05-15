@@ -98,31 +98,30 @@ public class Model {
 	}
 	
 	public void move(String x) {
-	if(!moving){
-		if(x.equals("up")) {
-			if(bird.yloc <= lane1)
-				yIncr = 0.0;
-			else{
-				yIncr = 0- (lane2 / 16); 
-				moving = true;
-				target = bird.yloc - lane2; //minus 1/4 the screen
+		if(!moving){
+			if(x.equals("up")) {
+				if(bird.yloc <= lane1)
+					yIncr = 0.0;
+				else{
+					yIncr = 0- (lane2 / 16); 
+					moving = true;
+					target = bird.yloc - lane2; //minus 1/4 the screen
+				}	
 			}
-						
-		}
-		else if (x.equals("down")) {
-			if(bird.yloc >= lane4)
+			else if (x.equals("down")) {
+				if(bird.yloc >= lane4)
+					yIncr = 0.0;
+				else{
+					yIncr = lane2 / 16;
+					moving = true;
+					target = bird.yloc +lane2; // plus 1/4 the screen
+				}
+			}		
+			else if (x.equals("stop")) {
 				yIncr = 0.0;
-			else{
-				yIncr = lane2 / 16;
-				moving = true;
-				target = bird.yloc +lane2; // plus 1/4 the screen
+				moving = false;
 			}
-		}		
-		else if (x.equals("stop")) {
-			yIncr = 0.0;
-			moving = false;
 		}
-	}
 	}
 	
 	public void spawnObjects() {
@@ -151,7 +150,7 @@ public class Model {
 		yValue.add(lane4);
         Random rand = new Random(); 
         return yValue.get(rand.nextInt(yValue.size())); 
-    	} 
+    } 
 	
 	public double randX() {
 		return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + screenSize.width;
@@ -164,7 +163,7 @@ public class Model {
 			if(bird.yloc == target){
 				yIncr = 0.0;
 				moving = false;			
-}
+			}
 		} 
 		if(!sprites.isEmpty()) {
 			Iterator<Sprite> itr = sprites.iterator();
@@ -180,7 +179,6 @@ public class Model {
 		else {
 			spawnObjects();
 		}
-		
 		if (bird.isDead()) {
 			QuizQ quiz = new QuizQ();
 			System.out.println("Working from model");
