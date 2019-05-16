@@ -54,7 +54,7 @@ public class View extends JFrame{
 	JProgressBar nestBar;
 	
 	public View() {
-		ospreyBackground = createImage("Images/GameBackground.jpg");
+		ospreyBackground = createImage("Images/GameBackground.png");
 		ospreyImg = createImage("Images/osprey2d_img.png");
 	   	ospreyImg = resize(ospreyImg, 200, 200);
 	   	BufferedImage ospreyFoodImg = createImage("Images/food_bfish.png");
@@ -63,7 +63,7 @@ public class View extends JFrame{
 	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
 		ospreyMinimap = createImage("Images/mini.jpg");
 		
-		clapperBackground = createImage("Images/Clapper_background.jpg");
+		clapperBackground = createImage("Images/Clapper_background.png");
 		clapperImg = createImage("Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
 	   	BufferedImage clapperFoodImg = createImage("Images/food_bfish.png");
