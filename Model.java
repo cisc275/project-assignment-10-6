@@ -23,14 +23,6 @@ public class Model {
 	private double lane2;
 	private double lane3;
 	private double lane4;
-	private double column1;
-	private double column2;
-	private double column3;
-	private double column4;
-	private double column5;
-	private double column6;
-	private double column7;
-	private double column8;
 	private double target;
 	private boolean moving = false;
 
@@ -43,14 +35,6 @@ public class Model {
 		lane2 = (double)(screenSize.height / 4);
 		lane3 = (double)(screenSize.height / 2);
 		lane4 = (double)(screenSize.height*3 / 4);
-		column1 = (double)(screenSize.width);
-		column2 = (double)(screenSize.width + (screenSize.width*2 / 8));
-		column2 = (double)(screenSize.width + (screenSize.width*3 / 8));
-		column2 = (double)(screenSize.width + (screenSize.width*4 / 8));
-		column2 = (double)(screenSize.width + (screenSize.width*5 / 8));
-		column2 = (double)(screenSize.width + (screenSize.width*6 / 8));
-		column2 = (double)(screenSize.width + (screenSize.width*7 / 8));
-		column2 = (double)(screenSize.width + (screenSize.width));
 	}
 
 	public void detectCollision() {
@@ -60,7 +44,7 @@ public class Model {
 			Rectangle o = new Rectangle((int)s.xloc,(int)s.yloc,s.getImgWidth(),s.getImgHeight());
 			Rectangle p = new Rectangle((int)bird.xloc,(int)bird.yloc,bird.getImgWidth(),bird.getImgHeight());
 			if (o.intersects(p)) {
-				if (isPixelCollide(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
+				if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
 					if (s.type.equals("Food")) {
 						bird.regen();
 						itr.remove();
@@ -77,7 +61,8 @@ public class Model {
 			}
 		}
 	}
-	public static boolean isPixelCollide(double x1, double y1, BufferedImage image1, double x2, double y2, BufferedImage image2) {
+	
+	public static boolean imageCollision(double x1, double y1, BufferedImage image1, double x2, double y2, BufferedImage image2) {
 		// initialization
 		double width1 = x1 + image1.getWidth() -1;
         double height1 = y1 + image1.getHeight() -1;
@@ -169,17 +154,7 @@ public class Model {
     } 
 	
 	public double randX() {
-		List<Double> xValue = new ArrayList<>(); 
-		xValue.add(column1);
-		xValue.add(column2);
-		xValue.add(column3);
-		xValue.add(column4);
-		xValue.add(column5);
-		xValue.add(column6);
-		xValue.add(column7);
-		xValue.add(column8);
-        Random rand = new Random(); 
-        return xValue.get(rand.nextInt(xValue.size())); 
+        return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + screenSize.width; 
 	}
 
 	public void updateLocation() {
