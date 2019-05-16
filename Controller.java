@@ -16,8 +16,8 @@ public class Controller implements KeyListener, ActionListener {
 	public Controller(){
 		view = new View();
 		model = new Model(view.getScreenSize(), view.getPlayer(), view.getImgs());
-		view.start.addActionListener(this);
-		view.drawPanel.addKeyListener(this);
+		view.startClapper.addActionListener(this);
+		view.startOsprey.addActionListener(this);
 	}
 	
     //run the simulation
@@ -54,8 +54,19 @@ public class Controller implements KeyListener, ActionListener {
 	
 	public void keyTyped(KeyEvent e) {}
 	
-	public void actionPerformed(ActionEvent e) {
-		view.removeMenu();
-		start();
+	public void actionPerformed(ActionEvent ae) {
+		String action = ae.getActionCommand();
+        if (action.equals("Clapper Rail")) {
+			view.setMigratoryStatus(false);
+			view.removeMenu();
+			view.clapperdrawPanel.addKeyListener(this);
+			start();
+        }
+		else if (action.equals("Osprey")) {
+			view.setMigratoryStatus(true);
+			view.removeMenu();
+			view.ospreydrawPanel.addKeyListener(this);
+			start();
+		}
 	}
 }

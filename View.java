@@ -26,48 +26,65 @@ import java.awt.Toolkit;
 	
 public class View extends JFrame{
 	
-	private BufferedImage background;
+	private BufferedImage ospreyBackground;
+	private BufferedImage clapperBackground;
 	public int backx;
 	public int backspeed;	//match to sprite scroll speed
-	private BufferedImage minimap;
+	private BufferedImage ospreyMinimap;
+	private BufferedImage clapperMinimap;
 	public int mapblipx;
 	public int mapblipy;
 	
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private Player bird;
 	private QuizQ quiz;
-	private BufferedImage birdImg;
+	private BufferedImage ospreyImg;
+	private BufferedImage clapperImg;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private ArrayList<BufferedImage> imgs = new ArrayList<>();
-	//State state;
+	private boolean migratory;
 	
 	JFrame frame =  new JFrame("Bird Game");
-	JButton start = new JButton("Start");
-	static DrawPanel drawPanel;
+	JButton startOsprey = new JButton("Play as an Osprey");
+	JButton startClapper = new JButton("Play as a Clapper Rail");
+	static ospreyDrawPanel ospreydrawPanel;
+	static clapperDrawPanel clapperdrawPanel;
 	MenuPanel menuPanel;
 	JProgressBar energyBar;
 	JProgressBar nestBar;
 	
 	public View() {
-		background = createImage("Images/GameBackground.jpg");
-		birdImg = createImage("Images/osprey2d_img.png");
-	   	birdImg = resize(birdImg, 200, 200);
-	   	BufferedImage foodImg = createImage("Images/food_bfish.png");
-	   	foodImg = resize(foodImg, 100, 100);
-	   	BufferedImage obstacleImg= createImage("Images/branchesd-obs.png");
-	   	obstacleImg = resize(obstacleImg, 100, 100);
-	   	BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
+		ospreyBackground = createImage("Images/GameBackground.jpg");
+		ospreyImg = createImage("Images/osprey2d_img.png");
+	   	ospreyImg = resize(ospreyImg, 200, 200);
+	   	BufferedImage ospreyFoodImg = createImage("Images/food_bfish.png");
+	   	ospreyFoodImg = resize(ospreyFoodImg, 100, 100);
+	   	BufferedImage ospreyObstacleImg= createImage("Images/branchesd-obs.png");
+	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
+		ospreyMinimap = createImage("Images/mini.jpg");
+		
+		clapperBackground = createImage("Images/Clapper_background.jpg");
+		clapperImg = createImage("Images/clapper_rail.png");
+	   	clapperImg = resize(clapperImg, 200, 200);
+	   	BufferedImage clapperFoodImg = createImage("Images/food_bfish.png");
+	   	clapperFoodImg = resize(clapperFoodImg, 100, 100);
+	   	BufferedImage clapperObstacleImg= createImage("Images/branchesd-obs.png");
+	   	clapperObstacleImg = resize(clapperObstacleImg, 100, 100);
+		clapperMinimap = createImage("Images/mini.jpg");
+		
+		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
-		minimap = createImage("Images/mini.jpg");
 	   	
-		imgs.add(foodImg);
-		imgs.add(obstacleImg);
+		imgs.add(ospreyFoodImg);
+		imgs.add(ospreyObstacleImg);
 		imgs.add(nestpieceImg);
-		bird = new Player(screenSize.width / 10, screenSize.height / 2, birdImg);
+		bird = new Player(screenSize.width / 10, screenSize.height / 2, ospreyImg, clapperImg);
 		
 		menuPanel = new MenuPanel();
-		drawPanel = new DrawPanel();
-		menuPanel.add(start);
+		startClapper.setActionCommand("Clapper Rail");
+		startOsprey.setActionCommand("Osprey");
+		menuPanel.add(startOsprey);
+		menuPanel.add(startClapper);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -77,18 +94,36 @@ public class View extends JFrame{
 	}
 
 	@SuppressWarnings("serial")
-	public class DrawPanel extends JPanel {
+	public class ospreyDrawPanel extends JPanel {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			g.drawImage(background, backx, 0, screenSize.width, screenSize.height,  this);
-			g.drawImage(background, backx+screenSize.width, 0, screenSize.width, screenSize.height,  this);
+			g.drawImage(ospreyBackground, backx, 0, screenSize.width, screenSize.height,  this);
+			g.drawImage(ospreyBackground, backx+screenSize.width, 0, screenSize.width, screenSize.height,  this);
 			if(backx <= 0 - screenSize.width)
 				backx = 0;
-			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, birdImg.getWidth(), birdImg.getHeight(),  this);
+			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, ospreyImg.getWidth(), ospreyImg.getHeight(),  this);
 			for(Sprite s: sprites) {
 				g.drawImage(s.Image, (int)s.xloc, (int)s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
 			}
-			g.drawImage(minimap, screenSize.width -260, screenSize.height - 375, 260, 314, this);
+			g.drawImage(ospreyMinimap, screenSize.width -260, screenSize.height - 375, 260, 314, this);
+			g.setColor(Color.RED);
+			g.fillOval(mapblipx, mapblipy, 15, 15);
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public class clapperDrawPanel extends JPanel {
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(clapperBackground, backx, 0, screenSize.width, screenSize.height,  this);
+			g.drawImage(clapperBackground, backx+screenSize.width, 0, screenSize.width, screenSize.height,  this);
+			if(backx <= 0 - screenSize.width)
+				backx = 0;
+			g.drawImage(bird.clapperImage, (int)bird.xloc, (int)bird.yloc, clapperImg.getWidth(), clapperImg.getHeight(),  this);
+			for(Sprite s: sprites) {
+				g.drawImage(s.Image, (int)s.xloc, (int)s.yloc, s.getImgWidth(), s.getImgHeight(),  this);
+			}
+			g.drawImage(clapperMinimap, screenSize.width -260, screenSize.height - 375, 260, 314, this);
 			g.setColor(Color.RED);
 			g.fillOval(mapblipx, mapblipy, 15, 15);
 		}
@@ -114,9 +149,12 @@ public class View extends JFrame{
 		}
 		backx -= backspeed;
 		
-		
-
-		drawPanel.repaint();
+		if (!migratory) {
+			clapperdrawPanel.repaint();
+		}
+		else {
+			ospreydrawPanel.repaint();
+		}
 		
 		if (b.isDead()) {
 			displayQuiz();
@@ -131,7 +169,7 @@ public class View extends JFrame{
 	   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
 			   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 			   null, q.getArrayAns(), options[q.getCorrectNum()]);
-   }
+    }
     
    
 	private BufferedImage createImage(String img) {
@@ -183,11 +221,22 @@ public class View extends JFrame{
       	energyBar.setStringPainted(true); 
         nestBar.setStringPainted(true);
 		frame.remove(menuPanel);
-		drawPanel.add(energyBar);
-		drawPanel.add(nestBar);
-		frame.add(drawPanel);
-		drawPanel.requestFocusInWindow();
-		drawPanel.requestFocus();
+		if (!migratory) {
+			clapperdrawPanel = new clapperDrawPanel();
+			clapperdrawPanel.add(energyBar);
+			clapperdrawPanel.add(nestBar);
+			frame.add(clapperdrawPanel);
+			clapperdrawPanel.requestFocusInWindow();
+			clapperdrawPanel.requestFocus();
+		}
+		else {
+			ospreydrawPanel = new ospreyDrawPanel();
+			ospreydrawPanel.add(energyBar);
+			ospreydrawPanel.add(nestBar);
+			frame.add(ospreydrawPanel);
+			ospreydrawPanel.requestFocusInWindow();
+			ospreydrawPanel.requestFocus();
+		}
 		frame.invalidate();
 		frame.validate();
 		frame.repaint();
@@ -195,5 +244,9 @@ public class View extends JFrame{
 
 	public ArrayList<BufferedImage> getImgs() {
 		return imgs;
+	}
+	
+	public void setMigratoryStatus(boolean a) {
+		migratory = a;
 	}
 }
