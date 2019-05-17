@@ -14,11 +14,12 @@ public class Model {
 	private int levelProgress = 0;
 	private ArrayList<Sprite> sprites = new ArrayList<>();
 	private Player bird;
-	private Nest nest;
 	private boolean birdDead = false;
 	private Dimension screenSize;
 	private ArrayList<BufferedImage> imgs = new ArrayList<>();
 	private double yIncr = 0.0;
+	private Nest nest;
+	private boolean gameOver;
 
 	private double lane1 = 0.0;
 	private double lane2;
@@ -26,16 +27,14 @@ public class Model {
 	private double lane4;
 	private double target;
 	private boolean moving = false;
-	private boolean migratory;
-	private boolean gameOver = false;
 
 
 	public Model(Dimension bounds, Player b, Nest n, ArrayList<BufferedImage> a) {
+		nest = n;
 		screenSize = bounds;
 		bird = b;
-		nest = n;
 		imgs = a;
-		
+
 		lane2 = (double)(screenSize.height / 4);
 		lane3 = (double)(screenSize.height / 2);
 		lane4 = (double)(screenSize.height*3 / 4);
@@ -47,7 +46,7 @@ public class Model {
 			Sprite s = itr.next();
 			Rectangle p;
 			Rectangle o;
-			if (!migratory) {
+			if (!bird.getMigratory()) {
 				p = new Rectangle((int)bird.xloc,(int)bird.yloc,bird.getClapperImgWidth(),bird.getClapperImgHeight());
 			}
 			else {
@@ -62,7 +61,7 @@ public class Model {
 			else {
 				o = new Rectangle((int)s.xloc,(int)s.yloc,s.getImgWidth(),s.getImgHeight());
 				if (o.intersects(p)) {
-					if(!migratory) {
+					if(!bird.getMigratory()) {
 						if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.clapperImage)) {
 							if (s.type.equals("Food")) {
 								bird.regen();
@@ -77,20 +76,20 @@ public class Model {
 								itr.remove();
 							}
 						}
-					}
-					else {
-						if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
-							if (s.type.equals("Food")) {
-								bird.regen();
-								itr.remove();
-							}
-							else if (s.type.equals("NestPiece")) {
-								bird.buildNest();
-								itr.remove();
-							}
-							else if (s.type.equals("Obstacle")) {
-								bird.damage();
-								itr.remove();
+						else {
+							if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
+								if (s.type.equals("Food")) {
+									bird.regen();
+									itr.remove();
+								}
+								else if (s.type.equals("NestPiece")) {
+									bird.buildNest();
+									itr.remove();
+								}
+								else if (s.type.equals("Obstacle")) {
+									bird.damage();
+									itr.remove();
+								}
 							}
 						}
 					}
@@ -163,10 +162,11 @@ public class Model {
 	}
 	
 	public void spawnObjects() {
-		if(!bird.isDead()) {			
+		if(!bird.isDead()) {
 			for(int i = 0; i < 15; i++) {
 				sprites.add(new Food(randX(), randY(), imgs.get(0))); 
 			}
+			
 			for(int i = 0; i < 7; i++) {
 				sprites.add(new Obstacle(randX(), randY(), imgs.get(1))); 
 			}
@@ -225,24 +225,26 @@ public class Model {
 			}
 		}
 		if (bird.isDead()) {
-			QuizQ quiz = new QuizQ();
-			System.out.println("Working from model");
+			QuizQ quiz = new QuizQ(bird.getMigratory());
+			if (quiz.getSubmitted()) {
+				birdDead = false;
+				bird.resetDeath();
+				
+			} else {
+				birdDead = true;
+				bird.setDeath(true);
+				
+			}
 		}
 	}
-	
+	public Nest getNest() {
+		return nest;
+	}
 	public ArrayList<Sprite> getSprites() {
 		return sprites;
 	}
 	
 	public Player getPlayer() {
 		return bird;
-	}
-	
-	public Nest getNest() {
-		return nest;
-	}
-	
-	public void setMigratoryStatus(boolean a) {
-		migratory = a;
 	}
 }

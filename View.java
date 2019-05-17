@@ -34,16 +34,16 @@ public class View extends JFrame{
 	private BufferedImage clapperMinimap;
 	public int mapblipx;
 	public int mapblipy;
+	private Nest nest;
 	
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private Player bird;
-	private Nest nest;
 	private QuizQ quiz;
 	private BufferedImage ospreyImg;
 	private BufferedImage clapperImg;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private ArrayList<BufferedImage> imgs = new ArrayList<>();
-	private boolean migratory;
+	//private boolean migratory;
 	
 	JFrame frame =  new JFrame("Bird Game");
 	JButton startOsprey = new JButton("Play as an Osprey");
@@ -55,34 +55,35 @@ public class View extends JFrame{
 	JProgressBar nestBar;
 	
 	public View() {
-		ospreyBackground = createImage("Images/GameBackground.png");
-		ospreyImg = createImage("Images/osprey2d_img.png");
+		ospreyBackground = createImage("src/Images/GameBackground.jpg");
+		ospreyImg = createImage("src/Images/osprey2d_img.png");
 	   	ospreyImg = resize(ospreyImg, 200, 200);
-	   	BufferedImage ospreyFoodImg = createImage("Images/food_bfish.png");
+	   	BufferedImage ospreyFoodImg = createImage("src/Images/food_bfish.png");
 	   	ospreyFoodImg = resize(ospreyFoodImg, 100, 100);
-	   	BufferedImage ospreyObstacleImg= createImage("Images/branchesd-obs.png");
+	   	BufferedImage ospreyObstacleImg= createImage("src/Images/branchesd-obs.png");
 	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
-		ospreyMinimap = createImage("Images/mini.jpg");
+		ospreyMinimap = createImage("src/Images/mini.jpg");
 		
-		clapperBackground = createImage("Images/Clapper_background.png");
-		clapperImg = createImage("Images/clapper_rail.png");
+		clapperBackground = createImage("src/Images/Clapper_background.jpg");
+		clapperImg = createImage("src/Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
-	   	BufferedImage clapperFoodImg = createImage("Images/food_bfish.png");
+	   	BufferedImage clapperFoodImg = createImage("src/Images/food_bfish.png");
 	   	clapperFoodImg = resize(clapperFoodImg, 100, 100);
-	   	BufferedImage clapperObstacleImg= createImage("Images/branchesd-obs.png");
+	   	BufferedImage clapperObstacleImg= createImage("src/Images/branchesd-obs.png");
 	   	clapperObstacleImg = resize(clapperObstacleImg, 100, 100);
-		clapperMinimap = createImage("Images/mini.jpg");
+		clapperMinimap = createImage("src/Images/mini.jpg");
 		
-		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
+		BufferedImage nestpieceImg = createImage("src/Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
-		BufferedImage nestImg = createImage("Images/nest.png");
+	   	
+	   	BufferedImage nestImg = createImage("src/Images/nest.png");
 		nestImg = resize(nestImg, 100, 100);
 	   	
 		imgs.add(ospreyFoodImg);
 		imgs.add(ospreyObstacleImg);
 		imgs.add(nestpieceImg);
 		bird = new Player(screenSize.width / 10, screenSize.height / 2, ospreyImg, clapperImg);
-		nest = new Nest(1.1 * screenSize.width, screenSize.height / 2, nestImg);
+		nest = new Nest(1.1*screenSize.width, screenSize.height/2, nestImg);
 		
 		menuPanel = new MenuPanel();
 		startClapper.setActionCommand("Clapper Rail");
@@ -153,9 +154,9 @@ public class View extends JFrame{
 		}
 		backx -= backspeed;
 		
-		if (!migratory) {
+		if (!bird.getMigratory()) {
 			clapperdrawPanel.repaint();
-		}
+		}                         
 		else {
 			ospreydrawPanel.repaint();
 		}
@@ -167,12 +168,38 @@ public class View extends JFrame{
 	}
 	
    public void displayQuiz() {
+	   System.out.println("In display quiz");
+	   QuizQ q = new QuizQ(bird.getMigratory());
+	   Answers[] options = q.getOptions();
 	   
-	   QuizQ q = new QuizQ();
-	   Answers[] options = q.getArrayAns();
-	   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
+	   
+	   if (bird.getMigratory() == true) {
+		   System.out.println("in migratory if of disply quiz");
+		  
+		   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
 			   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-			   null, q.getArrayAns(), options[q.getCorrectNum()]);
+			   null, options, options[0]);
+	   }
+	   else {
+		   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
+			   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+			   null, options, options[0]);
+	   }
+	   
+	   
+	   int option = 1;
+	   //(Integer) JOptionPane.getValue();
+	    
+	    if (option != q.getCorrectAns(options).getNum()) { // answer submitted is not correct
+	    	JOptionPane.showMessageDialog(null, "Not Correct!");
+	    	q.setSubmitted(false);
+	    } else {
+	    	JOptionPane.showMessageDialog(null, "Correct!");
+	    	q.setSubmitted(true);
+	    }
+	   
+	   
+	   
     }
     
    
@@ -225,7 +252,7 @@ public class View extends JFrame{
       	energyBar.setStringPainted(true); 
         nestBar.setStringPainted(true);
 		frame.remove(menuPanel);
-		if (!migratory) {
+		if (!bird.getMigratory()) {
 			clapperdrawPanel = new clapperDrawPanel();
 			clapperdrawPanel.add(energyBar);
 			clapperdrawPanel.add(nestBar);
@@ -253,8 +280,9 @@ public class View extends JFrame{
 	public Nest getNest() {
 		return nest;
 	}
-	
+	/**
 	public void setMigratoryStatus(boolean a) {
 		migratory = a;
 	}
+	*/
 }

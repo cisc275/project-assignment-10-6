@@ -8,6 +8,8 @@ public class Player extends Sprite{
 	public int nestProgress = 0; //How far they have built the nest (0-100%)
 	public int energyLevel = 50; //0-100%
 	public BufferedImage clapperImage;
+	public boolean migratory;
+	public boolean dead;
 	//public QuizQ quiz;
 	
 	Player(double x, double y, BufferedImage img, BufferedImage img2) {
@@ -39,28 +41,45 @@ public class Player extends Sprite{
 		}
 	}
 	
+	
+	public int getClapperImgWidth() {
+		return clapperImage.getWidth();
+	}
+
+	public int getClapperImgHeight() {
+		return clapperImage.getHeight();
+	}
+	
 	public void fatigue() {
 		energyLevel -= 1;
 	}
 	
 	public boolean isDead() {
 		if (energyLevel == 0) {
-			return true;
+			dead = true;
 		}
 		else {
-			return false;
+			dead = false;
 		}
+		return dead;
 	}
 	
 	public void resetDeath () {
+		dead = false;
 		energyLevel = 50;
 	}
 	
-	public int getClapperImgWidth() {
-		return clapperImage.getWidth();
+	public boolean getMigratory() {
+		return this.migratory;
 	}
+	public void setMigratoryStatus(boolean migratory) {
+	this.migratory = migratory;
+}
 	
-	public int getClapperImgHeight() {
-		return clapperImage.getHeight();
+	public void setDeath(boolean died) {
+		if (died == true) {
+			energyLevel = 0;
+			dead = true;
+		}
 	}
 }
