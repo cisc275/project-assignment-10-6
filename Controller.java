@@ -15,28 +15,25 @@ public class Controller implements KeyListener, ActionListener {
 	
 	public Controller(){
 		view = new View();
-		model = new Model(view.getScreenSize(), view.getPlayer(), view.getImgs());
+		model = new Model(view.getScreenSize(), view.getPlayer(), view.getNest(), view.getImgs());
 		view.startClapper.addActionListener(this);
 		view.startOsprey.addActionListener(this);
 	}
 	
     //run the simulation
 	public void start(){
-		
 		drawAction = new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				model.updateLocation();
 				view.update(model.getSprites(), model.getPlayer());
 			}
 		};
-		
 		EventQueue.invokeLater(new Runnable(){
 			public void run(){
 				Timer t = new Timer(0, drawAction);
 				t.start();
 			}
 		});
-
 	}
 	
 	@Override
@@ -58,12 +55,14 @@ public class Controller implements KeyListener, ActionListener {
 		String action = ae.getActionCommand();
         if (action.equals("Clapper Rail")) {
 			view.setMigratoryStatus(false);
+			model.setMigratoryStatus(false);
 			view.removeMenu();
 			view.clapperdrawPanel.addKeyListener(this);
 			start();
         }
 		else if (action.equals("Osprey")) {
 			view.setMigratoryStatus(true);
+			model.setMigratoryStatus(true);
 			view.removeMenu();
 			view.ospreydrawPanel.addKeyListener(this);
 			start();

@@ -37,6 +37,7 @@ public class View extends JFrame{
 	
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private Player bird;
+	private Nest nest;
 	private QuizQ quiz;
 	private BufferedImage ospreyImg;
 	private BufferedImage clapperImg;
@@ -74,11 +75,14 @@ public class View extends JFrame{
 		
 		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
+		BufferedImage nestImg = createImage("Images/nest.png");
+		nestImg = resize(nestImg, 100, 100);
 	   	
 		imgs.add(ospreyFoodImg);
 		imgs.add(ospreyObstacleImg);
 		imgs.add(nestpieceImg);
 		bird = new Player(screenSize.width / 10, screenSize.height / 2, ospreyImg, clapperImg);
+		nest = new Nest(1.1 * screenSize.width, screenSize.height / 2, nestImg);
 		
 		menuPanel = new MenuPanel();
 		startClapper.setActionCommand("Clapper Rail");
@@ -244,6 +248,10 @@ public class View extends JFrame{
 
 	public ArrayList<BufferedImage> getImgs() {
 		return imgs;
+	}
+	
+	public Nest getNest() {
+		return nest;
 	}
 	
 	public void setMigratoryStatus(boolean a) {

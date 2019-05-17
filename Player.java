@@ -55,4 +55,12 @@ public class Player extends Sprite{
 	public void resetDeath () {
 		energyLevel = 50;
 	}
+	
+	public int getClapperImgWidth() {
+		return clapperImage.getWidth();
+	}
+	
+	public int getClapperImgHeight() {
+		return clapperImage.getHeight();
+	}
 }
