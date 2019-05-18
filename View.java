@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -14,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,13 +24,16 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-	
+import java.awt.AWTKeyStroke;
+
 public class View extends JFrame{
 	
 	private BufferedImage ospreyBackground;
 	private BufferedImage clapperBackground;
+	private BufferedImage endGameBackground;
 	public int backx;
 	public int backspeed;	//match to sprite scroll speed
 	private BufferedImage ospreyMinimap;
@@ -134,6 +140,8 @@ public class View extends JFrame{
 		}
 	}
 	
+	
+	
 	@SuppressWarnings("serial")
 	public class MenuPanel extends JPanel {
 		protected void paintComponent(Graphics g) {
@@ -163,7 +171,7 @@ public class View extends JFrame{
 		
 		if (b.isDead()) {
 			displayQuiz();
-			b.resetDeath();
+			//b.resetDeath();
 		}
 	}
 	
@@ -173,36 +181,23 @@ public class View extends JFrame{
 	   Answers[] options = q.getOptions();
 	   
 	   
-	   if (bird.getMigratory() == true) {
-		   System.out.println("in migratory if of disply quiz");
-		  
-		   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
-			   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-			   null, options, options[0]);
-	   }
-	   else {
-		   JOptionPane.showOptionDialog(null, q.getQuestion(), "Come back to life if you answer correctly!",
-			   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-			   null, options, options[0]);
-	   }
+	   //JOptionPane pane = new JOptionPane(q.getQuestion(), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION);
+	   int option =  JOptionPane.showOptionDialog(null, q.getQuestion(), "Answer correctly to come back to life!",
+	   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+	   null, options, options[0]);
 	   
-	   
-	   int option = 1;
-	   //(Integer) JOptionPane.getValue();
-	    
+	  System.out.println("Option chose:" + option);
+	  System.out.println("Correct Num: " + q.getCorrectAns(options).getNum());
 	    if (option != q.getCorrectAns(options).getNum()) { // answer submitted is not correct
 	    	JOptionPane.showMessageDialog(null, "Not Correct!");
 	    	q.setSubmitted(false);
 	    } else {
 	    	JOptionPane.showMessageDialog(null, "Correct!");
 	    	q.setSubmitted(true);
+	    	bird.regen();
 	    }
-	   
-	   
-	   
     }
     
-   
 	private BufferedImage createImage(String img) {
     	BufferedImage bufferedImage;
     	try {
@@ -251,6 +246,7 @@ public class View extends JFrame{
 		nestBar.setValue(0);
       	energyBar.setStringPainted(true); 
         nestBar.setStringPainted(true);
+        
 		frame.remove(menuPanel);
 		if (!bird.getMigratory()) {
 			clapperdrawPanel = new clapperDrawPanel();
@@ -263,6 +259,7 @@ public class View extends JFrame{
 		else {
 			ospreydrawPanel = new ospreyDrawPanel();
 			ospreydrawPanel.add(energyBar);
+			
 			ospreydrawPanel.add(nestBar);
 			frame.add(ospreydrawPanel);
 			ospreydrawPanel.requestFocusInWindow();
@@ -280,9 +277,4 @@ public class View extends JFrame{
 	public Nest getNest() {
 		return nest;
 	}
-	/**
-	public void setMigratoryStatus(boolean a) {
-		migratory = a;
-	}
-	*/
 }
