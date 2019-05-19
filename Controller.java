@@ -18,6 +18,8 @@ public class Controller implements KeyListener, ActionListener {
 		model = new Model(view.getScreenSize(), view.getPlayer(), view.getNest(), view.getImgs());
 		view.startClapper.addActionListener(this);
 		view.startOsprey.addActionListener(this);
+		view.startClapperTutorial.addActionListener(this);
+		view.startOspreyTutorial.addActionListener(this);
 	}
 	
     //run the simulation
@@ -27,6 +29,20 @@ public class Controller implements KeyListener, ActionListener {
 				model.updateLocation();
 				view.update(model.getSprites(), model.getPlayer(), model.getGameOver());
 				model.setGameOver(view.getGameOver());
+			}
+		};
+		EventQueue.invokeLater(new Runnable(){
+			public void run(){
+				Timer t = new Timer(15, drawAction);
+				t.start();
+			}
+		});
+	}
+	
+	public void startTutorial(){
+		drawAction = new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+	
 			}
 		};
 		EventQueue.invokeLater(new Runnable(){
@@ -67,6 +83,20 @@ public class Controller implements KeyListener, ActionListener {
 			view.removeMenu();
 			view.ospreydrawPanel.addKeyListener(this);
 			start();
+		}
+		else if (action.equals("Clapper Tutorial")) {
+			view.getPlayer().setMigratory(false);
+			model.setLevelProgress(0);
+			view.removeMenu();
+			view.clapperdrawPanel.addKeyListener(this);
+			startTutorial();
+		}
+		else if (action.equals("Osprey Tutorial")) {
+			view.getPlayer().setMigratory(true);
+			model.setLevelProgress(0);
+			view.removeMenu();
+			view.ospreydrawPanel.addKeyListener(this);
+			startTutorial();
 		}
 	}
 }

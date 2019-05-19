@@ -28,6 +28,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.AWTKeyStroke;
+import javax.swing.ImageIcon;
 
 public class View extends JFrame{
 	
@@ -53,8 +54,10 @@ public class View extends JFrame{
 	//private boolean migratory;
 	
 	JFrame frame =  new JFrame("Bird Game");
-	JButton startOsprey = new JButton("Play as an Osprey");
-	JButton startClapper = new JButton("Play as a Clapper Rail");
+	JButton startOsprey;
+	JButton startClapper;
+	JButton startOspreyTutorial;
+	JButton startClapperTutorial;
 	static ospreyDrawPanel ospreydrawPanel;
 	static clapperDrawPanel clapperdrawPanel;
 	MenuPanel menuPanel;
@@ -64,30 +67,38 @@ public class View extends JFrame{
 	
 	
 	public View() {
-		ospreyBackground = createImage("src/Images/GameBackground.png");
-		ospreyImg = createImage("src/Images/osprey2d_img.png");
+		ImageIcon ospreyIcon = new ImageIcon("Images/ospreyIcon.png");
+		ImageIcon clapperrailIcon = new ImageIcon("Images/clapperrailIcon.png");
+		startOsprey = new JButton("Play as an Osprey", ospreyIcon);
+		startClapper = new JButton("Play as a Clapper Rail", clapperrailIcon);
+		startOspreyTutorial = new JButton("Start Osprey tutorial");
+		startClapperTutorial = new JButton("Start Clapper Rail tutorial");
+		ospreyBackground = createImage("Images/GameBackground.png");
+		ospreyImg = createImage("Images/osprey2d_img.png");
 	   	ospreyImg = resize(ospreyImg, 200, 200);
-	   	BufferedImage ospreyFoodImg = createImage("src/Images/food_bfish.png");
+	   	BufferedImage ospreyFoodImg = createImage("Images/food_bfish.png");
 	   	ospreyFoodImg = resize(ospreyFoodImg, 100, 100);
-	   	BufferedImage ospreyObstacleImg= createImage("src/Images/branchesd-obs.png");
+	   	BufferedImage ospreyObstacleImg= createImage("Images/branchesd-obs.png");
 	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
-		ospreyMinimap = createImage("src/Images/mini.jpg");
+		ospreyMinimap = createImage("Images/mini.jpg");
 		
-		clapperBackground = createImage("src/Images/Clapper_background.png");
-		clapperImg = createImage("src/Images/clapper_rail.png");
+		clapperBackground = createImage("Images/Clapper_background.png");
+		clapperImg = createImage("Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
-	   	BufferedImage clapperFoodImg = createImage("src/Images/food_bfish.png");
+	   	BufferedImage clapperFoodImg = createImage("Images/food_bfish.png");
 	   	clapperFoodImg = resize(clapperFoodImg, 100, 100);
-	   	BufferedImage clapperObstacleImg= createImage("src/Images/branchesd-obs.png");
+	   	BufferedImage clapperObstacleImg= createImage("Images/branchesd-obs.png");
 	   	clapperObstacleImg = resize(clapperObstacleImg, 100, 100);
-		clapperMinimap = createImage("src/Images/mini.jpg");
+		clapperMinimap = createImage("Images/mini.jpg");
 		
-		BufferedImage nestpieceImg = createImage("src/Images/crd_nestpiece.png");
+		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
 	   	
-	   	BufferedImage nestImg = createImage("src/Images/nest.png");
+	   	BufferedImage nestImg = createImage("Images/nest.png");
 		nestImg = resize(nestImg, 100, 100);
 	   	
+		startClapper.setPreferredSize(new Dimension(500, 500));
+		startOsprey.setPreferredSize(new Dimension(500, 500));
 		imgs.add(ospreyFoodImg);
 		imgs.add(ospreyObstacleImg);
 		imgs.add(nestpieceImg);
@@ -95,8 +106,13 @@ public class View extends JFrame{
 		nest = new Nest(1.1*screenSize.width, screenSize.height/2, nestImg);
 		
 		menuPanel = new MenuPanel();
+		menuPanel.setBackground(Color.BLUE);
+		startClapperTutorial.setActionCommand("Clapper Tutorial");
+		startOspreyTutorial.setActionCommand("Osprey Tutorial");
 		startClapper.setActionCommand("Clapper Rail");
 		startOsprey.setActionCommand("Osprey");
+		menuPanel.add(startClapperTutorial);
+		menuPanel.add(startOspreyTutorial);
 		menuPanel.add(startOsprey);
 		menuPanel.add(startClapper);
 		
@@ -262,9 +278,8 @@ public class View extends JFrame{
 		nestBar.setValue(0);
       	energyBar.setStringPainted(true); 
         nestBar.setStringPainted(true);
-        energyBar.setString(String.format("Energy: ",
-                energyBar.getValue()));
-        nestBar.setString(String.format("Nest Progress: ", nestBar.getValue()));
+        energyBar.setString(String.format("Energy: ", bird.energyLevel));
+        nestBar.setString(String.format("Nest Progress: ", bird.nestProgress));
         
         
         
