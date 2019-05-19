@@ -41,6 +41,7 @@ public class View extends JFrame{
 	public int mapblipx;
 	public int mapblipy;
 	private Nest nest;
+	private boolean gameOver;
 	
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private Player bird;
@@ -153,49 +154,59 @@ public class View extends JFrame{
 		}
 	}
    
-    public void update(ArrayList<Sprite> s, Player b) {
-		sprites = s;
-		bird = b;
-
-		energyBar.setValue(bird.energyLevel);
-		nestBar.setValue(bird.nestProgress);
-		
-		if(backx == -backspeed){
-			mapblipy -=10;
-			mapblipx += 3;
+    public void update(ArrayList<Sprite> s, Player b, boolean g) {
+		gameOver = g;
+		if (gameOver) {
+			removeGamePanel();
 		}
-		backx -= backspeed;
-		
-		if (!bird.getMigratory()) {
-			clapperdrawPanel.repaint();
-		}                         
 		else {
-			ospreydrawPanel.repaint();
-		}
-		
-		if (bird.isDead()) {
-			displayQuiz();
-			//b.resetDeath();
+			sprites = s;
+			bird = b;
+
+			energyBar.setValue(bird.energyLevel);
+			nestBar.setValue(bird.nestProgress);
+			
+			if(backx == -backspeed){
+				mapblipy -=10;
+				mapblipx += 3;
+			}
+			backx -= backspeed;
+			
+			
+			if (!bird.getMigratory()) {
+				clapperdrawPanel.repaint();
+			}                         
+			else {
+				ospreydrawPanel.repaint();
+			}
+			
+			if (bird.isDead()) {
+				displayQuiz();
+				//b.resetDeath();
+			}
 		}
 	}
 	
    public void displayQuiz() {
+
 	   QuizQ q = new QuizQ(bird.getMigratory());
 	   Answers[] options = q.getOptions();
+
 	   
 	   
 	   //JOptionPane pane = new JOptionPane(q.getQuestion(), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION);
-	   int option =  JOptionPane.showOptionDialog(null, q.getQuestion(), "Answer correctly to come back to life!",
-	   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-	   null, options, options[0]);
+		int option =  JOptionPane.showOptionDialog(null, q.getQuestion(), "Answer correctly to come back to life!",
+		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+		null, options, options[0]);
 	   
+
 	    if (option != q.getCorrectAns(options).getNum()) { // answer submitted is not correct
 	    	JOptionPane.showMessageDialog(null, "Not Correct!");
 	    	q.setSubmitted(false);
 	    } else {
 	    	JOptionPane.showMessageDialog(null, "Correct!");
 	    	q.setSubmitted(true);
-	    	bird.regen();
+	    	bird.revive();
 	    }
     }
     
@@ -272,7 +283,6 @@ public class View extends JFrame{
 		else {
 			ospreydrawPanel = new ospreyDrawPanel();
 			ospreydrawPanel.add(energyBar);
-			
 			ospreydrawPanel.add(nestBar);
 			frame.add(ospreydrawPanel);
 			ospreydrawPanel.requestFocusInWindow();
@@ -282,11 +292,34 @@ public class View extends JFrame{
 		frame.validate();
 		frame.repaint();
 	}
+	
+	public void removeGamePanel() {
+		if (!bird.getMigratory()) {
+			frame.remove(clapperdrawPanel);
+		} 
+		else {
+			frame.remove(ospreydrawPanel);
+		}
+		gameOver = false;
+		bird.energyLevel = 50;
+		frame.add(menuPanel);
+		frame.invalidate();
+		frame.validate();
+		frame.repaint();
+	}
 
 	public ArrayList<BufferedImage> getImgs() {
 		return imgs;
 	}
 	
+	public void setGameOver(boolean g) {
+		gameOver = g;
+	}
+	
+	public boolean getGameOver() {
+		return gameOver;
+	}
+
 	public Nest getNest() {
 		return nest;
 	}
