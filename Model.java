@@ -76,20 +76,20 @@ public class Model {
 								itr.remove();
 							}
 						}
-						else {
-							if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
-								if (s.type.equals("Food")) {
-									bird.regen();
-									itr.remove();
-								}
-								else if (s.type.equals("NestPiece")) {
-									bird.buildNest();
-									itr.remove();
-								}
-								else if (s.type.equals("Obstacle")) {
-									bird.damage();
-									itr.remove();
-								}
+					}
+					else {
+						if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
+							if (s.type.equals("Food")) {
+								bird.regen();
+								itr.remove();
+							}
+							else if (s.type.equals("NestPiece")) {
+								bird.buildNest();
+								itr.remove();
+							}
+							else if (s.type.equals("Obstacle")) {
+								bird.damage();
+								itr.remove();
 							}
 						}
 					}
@@ -97,6 +97,7 @@ public class Model {
 			}
 		}
 	}
+	
 	
 	public static boolean imageCollision(double x1, double y1, BufferedImage image1, double x2, double y2, BufferedImage image2) {
 		// initialization

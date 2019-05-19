@@ -72,9 +72,10 @@ public class Player extends Sprite{
 	public boolean getMigratory() {
 		return this.migratory;
 	}
-	public void setMigratoryStatus(boolean migratory) {
-	this.migratory = migratory;
-}
+	
+	public void setMigratory(boolean migratory) {
+		this.migratory = migratory;
+	}
 	
 	public void setDeath(boolean died) {
 		if (died == true) {

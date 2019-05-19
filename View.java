@@ -61,28 +61,28 @@ public class View extends JFrame{
 	JProgressBar nestBar;
 	
 	public View() {
-		ospreyBackground = createImage("src/Images/GameBackground.jpg");
-		ospreyImg = createImage("src/Images/osprey2d_img.png");
+		ospreyBackground = createImage("Images/GameBackground.png");
+		ospreyImg = createImage("Images/osprey2d_img.png");
 	   	ospreyImg = resize(ospreyImg, 200, 200);
-	   	BufferedImage ospreyFoodImg = createImage("src/Images/food_bfish.png");
+	   	BufferedImage ospreyFoodImg = createImage("Images/food_bfish.png");
 	   	ospreyFoodImg = resize(ospreyFoodImg, 100, 100);
-	   	BufferedImage ospreyObstacleImg= createImage("src/Images/branchesd-obs.png");
+	   	BufferedImage ospreyObstacleImg= createImage("Images/branchesd-obs.png");
 	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
-		ospreyMinimap = createImage("src/Images/mini.jpg");
+		ospreyMinimap = createImage("Images/mini.jpg");
 		
-		clapperBackground = createImage("src/Images/Clapper_background.jpg");
-		clapperImg = createImage("src/Images/clapper_rail.png");
+		clapperBackground = createImage("Images/Clapper_background.png");
+		clapperImg = createImage("Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
-	   	BufferedImage clapperFoodImg = createImage("src/Images/food_bfish.png");
+	   	BufferedImage clapperFoodImg = createImage("Images/food_bfish.png");
 	   	clapperFoodImg = resize(clapperFoodImg, 100, 100);
-	   	BufferedImage clapperObstacleImg= createImage("src/Images/branchesd-obs.png");
+	   	BufferedImage clapperObstacleImg= createImage("Images/branchesd-obs.png");
 	   	clapperObstacleImg = resize(clapperObstacleImg, 100, 100);
-		clapperMinimap = createImage("src/Images/mini.jpg");
+		clapperMinimap = createImage("Images/mini.jpg");
 		
-		BufferedImage nestpieceImg = createImage("src/Images/crd_nestpiece.png");
+		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
 	   	
-	   	BufferedImage nestImg = createImage("src/Images/nest.png");
+	   	BufferedImage nestImg = createImage("Images/nest.png");
 		nestImg = resize(nestImg, 100, 100);
 	   	
 		imgs.add(ospreyFoodImg);
@@ -169,7 +169,7 @@ public class View extends JFrame{
 			ospreydrawPanel.repaint();
 		}
 		
-		if (b.isDead()) {
+		if (bird.isDead()) {
 			displayQuiz();
 			//b.resetDeath();
 		}

@@ -54,15 +54,13 @@ public class Controller implements KeyListener, ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		String action = ae.getActionCommand();
         if (action.equals("Clapper Rail")) {
-			view.setMigratoryStatus(false);
-			model.setMigratoryStatus(false);
+			view.getPlayer().setMigratory(false);
 			view.removeMenu();
 			view.clapperdrawPanel.addKeyListener(this);
 			start();
         }
 		else if (action.equals("Osprey")) {
-			view.setMigratoryStatus(true);
-			model.setMigratoryStatus(true);
+			view.getPlayer().setMigratory(true);
 			view.removeMenu();
 			view.ospreydrawPanel.addKeyListener(this);
 			start();
