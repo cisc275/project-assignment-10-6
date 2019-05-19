@@ -3,12 +3,12 @@ public class Answers {
 
 	boolean correct;
 	String ans;
-	char letter;
+	int num;
 	
-	public Answers(boolean correct, String ans, char letter) {
+	public Answers(boolean correct, String ans, int num) {
 		this.correct = correct;
 		this.ans = ans;
-		this.letter = letter;
+		this.num = num;
 	}
 	
 	public boolean isCorrect() {
@@ -23,8 +23,8 @@ public class Answers {
 		return (this.ans);
 	}
 	
-	public char getLetter() {
-		return (this.letter);
+	public int getNum() {
+		return (this.num);
 	}
 	
 }

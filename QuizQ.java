@@ -5,135 +5,112 @@ import javax.swing.JTextArea;
 
 public class QuizQ {
 	
-	private String question; // quizzes have questions, answers and wrong choices
-	public String answer;
-	public char correctLetter;
+	String question; // quizzes have questions, answers and wrong choices
+	//public char correctLetter;
 	private int correctNum;
-
+	Answers answer;
+	Answers[] options;
+	boolean answeredCorrectly;
 	
-	// Array of answers for each question
-	Answers[] a0 = new Answers[] {new Answers(false, "ONE", '1'), new Answers(true, "TWO T",'2'), new Answers(false, "THREE",'3'), new Answers(false, "FOUR",'4')};
-	Answers[] a1 = new Answers[] {new Answers(true, "ONE T", '1'), new Answers(false, "TWO",'2'), new Answers(false, "THREE",'3'), new Answers(false, "FOUR",'4')};
-	Answers[] a2 = new Answers[] {new Answers(false, "ONE", '1'), new Answers(false, "TWO",'2'), new Answers(true, "THREE T",'3'), new Answers(false, "FOUR",'4')};
-	Answers[] a3 = new Answers[] {new Answers(true, "ONE T", '1'), new Answers(false, "TWO",'2'), new Answers(false, "THREE",'3'), new Answers(false, "FOUR",'4')};
-	Answers[] a4 = new Answers[] {new Answers(false, "ONE", '1'), new Answers(false, "TWO",'2'), new Answers(false, "THREE",'3'), new Answers(true, "FOUR T",'4')};
-	Answers[] a5 = new Answers[] {new Answers(false, "ONE", '1'), new Answers(false, "TWO",'2'), new Answers(true, "THREE T",'3'), new Answers(false, "FOUR",'4')};
+	public boolean migratoryQ;
+	
+	// Need arrays of questions and answers for migratory and non migratory
+	
+	String[] questionsM = new String[] { "Ospery like to eat: ", "Osprey live in what kind of habitat?","Osprey usually travel by: ","Osprey like to build nests out of: ","Osprey are what kind of bird? "}; 
+	
+	Answers[] am0 = new Answers[] {new Answers(false, "Seeds", 0), new Answers(true, "Fish",1), new Answers(false, "Crabs",2), new Answers(false, "Meat",3)};
+	Answers[] am1 = new Answers[] {new Answers(true, "Near shallow bodies of water", 0), new Answers(false, "Near cities",1), new Answers(false, "On mountains",2), new Answers(false, "In deserts",3)};
+	Answers[] am2 = new Answers[] {new Answers(false, "Walking", 0), new Answers(false, "Swimming",1), new Answers(true, "Flying",2), new Answers(false, "Jumping",3)};
+	Answers[] am3 = new Answers[] {new Answers(true, "Sticks", 0), new Answers(false, "Steel",1), new Answers(false, "Foam",2), new Answers(false, "Soil",3)};
+	Answers[] am4 = new Answers[] {new Answers(false, "Nonmigratory", 0), new Answers(true, "Migratory",1), new Answers(false, "Both",2), new Answers(false, "Neither",3)};
+	
+	String[] questionsNM = new String[] {"Clapper rails like to eat: ","Clapper rails live in what kind of habitat?","Clapper rails usually travel by: ","Clapper rails like to build their nest out of: ","Clapper rails are what kind of bird?"};
+	
+	Answers[] anm0 = new Answers[] {new Answers(false, "Candy", 0), new Answers(true, "Fish",1), new Answers(false, "Insects",2), new Answers(false, "Fruit",3)};
+	Answers[] anm1 = new Answers[] {new Answers(true, "Near shallow bodies of water", 0), new Answers(false, "Near cities",1), new Answers(false, "On mountains",2), new Answers(false, "In deserts",3)};
+	Answers[] anm2 = new Answers[] {new Answers(false, "Flying", 0), new Answers(false, "Swimming",1), new Answers(true, "On the ground",2), new Answers(false, "Jumping",3)};
+	Answers[] anm3 = new Answers[] {new Answers(true, "Sticks", 0), new Answers(false, "Steel",1), new Answers(false, "Soil",2), new Answers(false, "Foam",3)};
+	Answers[] anm4 = new Answers[] {new Answers(false, "Migratory", 0), new Answers(true, "Nonmigratory",1), new Answers(false, "Both",2), new Answers(false, "Neither",3)};
 	
 	// Make a 2d array of all answers; each row is for the corresponding question, and each column is answer choices 1-4
-	Answers[][] allAns = new Answers[][] {a0,a1,a2,a3,a4,a5};
+	Answers[][] allAnsM = new Answers[][] {am0,am1,am2,am3,am4};
+	Answers[][] allAnsNM = new Answers[][] {anm0,anm1,anm2,anm3,anm4};
+
 	
-	// Need an array of questions that correspond to row of 2d allAns array
-	String[] questions = new String[] {"Q0","Q1","Q2","Q3","Q4","Q5"};
-	
-	public char getCorrectLetter() {
-		return this.correctLetter;
-	}
-	
-	public int getCorrectNum() {
-		int return_val = 0;
-		for (int i = 0; i < 4; i++) {
-			if (allAns[correctNum][i].isCorrect()) {
-				return_val = i;
-			}
-		}
-		return return_val;
-	}
-	
-	// this method will choose a random question and print it to the screen
+	// this method will choose a random question number and return it           
 	public int chooseQ() {
 		
 		// choosing a random question to display
 		Random rand = new Random();
-		int nextNum = rand.nextInt(6); // choose a random number from 0-5 to be the question number to be asked
-		System.out.println("Question Number " + nextNum);
-		System.out.println("IN QUIZ");
-		// avoid asking the same question twice in a row; check to see if previous question # is the same as this next one
-		//while (correctNum == nextNum) {
-		//	nextNum = (int)(Math.random() % 5);
-		//}
+		int nextNum = rand.nextInt(5); // choose a random number from 0-4 to be the question number to be asked
 		correctNum = nextNum;
-		question = questions[nextNum];
-		//System.out.println(question);
-		return nextNum;
+		return nextNum; // returns index of question chosen
 	}
 	
-	// getting the correct answer index of subarray for the particular question
-	public int getCorrectAns(int correctNum) {
-		int ansNum = 0;
-		for (int i = 0; i < 4; i++) {
-			ansNum = i;
-			if (allAns[correctNum][i].isCorrect()) { // if this is the correct answer, set this as the answer and break from loop
-				answer = allAns[correctNum][i].getAns();
-				break;
-			}
+	// getting the correct answer for the subarray for the particular question
+	// Pass in answers array for the particular question, and returns the string of the answer
+	public Answers getCorrectAns(Answers[] arr) {
+		Answers b = arr[0];
+		for (int i = 0; i < 4; i++) { // iterate through answers in the array of options 
+			if (arr[i].isCorrect()) {
+			b = arr[i];
+			break;
 		}
-		return ansNum;
+			//if (a.isCorrect()) { // if it is the correct answer, set return answer to a
+			//	b = a;
+			}
+		
+		System.out.println("After for, correct is " + b.getAns());
+		return b; // returns correct answer 
 	}
+		
 	public String toString() {
 		return this.question;
 	}
 	
 	public void printChoices() {
 		for (int i = 0; i < 4; i++) {
-			System.out.println(allAns[correctNum][i].getAns());
+			if (migratoryQ) {
+			System.out.println(allAnsM[correctNum][i].getAns());
+			} else {
+				System.out.println(allAnsNM[correctNum][i].getAns());
+			}
 		}
 	}
 	
-	public Answers[] getArrayAns() {
-		return allAns[getCorrectAns(correctNum)];
+	public Answers[] getOptions() {
+		return this.options;
 	}
-	
 	public String getQuestion() {
 		return (this.question);
 	}
+	public void setSubmitted(boolean ans) {
+		answeredCorrectly = ans;
+	}
+	public boolean getSubmitted() {
+		return this.answeredCorrectly;
+	}
 	
-	public QuizQ() {
+	public QuizQ(boolean migratory) {
 		System.out.println("Entering quiz constructor");
-		int questI = chooseQ();
-		int ansI = getCorrectAns(questI); // this provides second array index where the correct answer is. So coordinates of correct answer are
-		// given by chooseQ method (questI) and ansI
 		
-		// print out question
-		System.out.println(question);
+		migratoryQ = migratory;
+		int questI = chooseQ(); // gets random question and sets questI = index of question
 		
-		// to print out answers:
-		for (int i = 0; i < 4; i++) {
-			System.out.println(allAns[questI][i]);
+		if (migratory) {
+			question = questionsM[questI]; // sets question string as the question to be displayed
+			options = allAnsM[questI]; // array of answer choices for that question
+			answer = getCorrectAns(options);  // sets the answer field as the correct answer
 		}
 		
-		// get letter input that is correct answer
-		correctLetter = allAns[questI][ansI].getLetter();
-		
-		
-		//question = "Do you want to continue?";
-		//answer = "y";
-		//wrong = new String[1];
-		//wrong[0] = "n";
+		else {
+			// same but for non migratory arrays
+			question = questionsNM[questI];
+			options = allAnsNM[questI];
+			answer = getCorrectAns(options);
+		}
+		System.out.println("End of constructor");
 	}
-	/**
-	public String toString() {
-		String r = question;
-		r+= "\n";
-		r+="\t";
-		r+=answer;
-		for(int i=0; i< wrong.length; i++)
-			r = r + " or "+wrong[i];
-		
-		return r;
-	}
-	*/
-/*Questions
- * 1) Ospery like to eat: a. seeds b. crabs ansc.(fish) d.meat
- * Clapper Rail like to eat: a. candy b. insects ansc. crabs d. fruit
- * 2)Ospery live in what kind of habitat?
- * ansa. near shallow bodies of water b. near cities c. on mountains d. in swamps
- * Clapper Rail. . .?
- * ansa. in saltmarshes b. on mountains c. near shallow bodies of water d. near cities
- * 3)Ospery usually travel by: a. walking ansb. flying c. swimming d. jumping
- * Clapper Rail . . .: a. flying ansb. on ground c. jumping d. swimming
- * 4)Ospery like to build their nest out of: a. steel b. foam c. soil ansd. sticks
- * Clapper Rail . . .: a. steel b. foam c. soil ansd. sticks  
- * 5)Ospery are what kind of bird? ansa. migratory b. nonmigratory c. both d. neither
- * Clapper Rail . . .? ansa. nonmigratory b. migratory c. both d. neither
- */
+	
+	
 }
