@@ -60,29 +60,31 @@ public class View extends JFrame{
 	JProgressBar energyBar;
 	JProgressBar nestBar;
 	
+	
+	
 	public View() {
-		ospreyBackground = createImage("Images/GameBackground.png");
-		ospreyImg = createImage("Images/osprey2d_img.png");
+		ospreyBackground = createImage("src/Images/GameBackground.png");
+		ospreyImg = createImage("src/Images/osprey2d_img.png");
 	   	ospreyImg = resize(ospreyImg, 200, 200);
-	   	BufferedImage ospreyFoodImg = createImage("Images/food_bfish.png");
+	   	BufferedImage ospreyFoodImg = createImage("src/Images/food_bfish.png");
 	   	ospreyFoodImg = resize(ospreyFoodImg, 100, 100);
-	   	BufferedImage ospreyObstacleImg= createImage("Images/branchesd-obs.png");
+	   	BufferedImage ospreyObstacleImg= createImage("src/Images/branchesd-obs.png");
 	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
-		ospreyMinimap = createImage("Images/mini.jpg");
+		ospreyMinimap = createImage("src/Images/mini.jpg");
 		
-		clapperBackground = createImage("Images/Clapper_background.png");
-		clapperImg = createImage("Images/clapper_rail.png");
+		clapperBackground = createImage("src/Images/Clapper_background.png");
+		clapperImg = createImage("src/Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
-	   	BufferedImage clapperFoodImg = createImage("Images/food_bfish.png");
+	   	BufferedImage clapperFoodImg = createImage("src/Images/food_bfish.png");
 	   	clapperFoodImg = resize(clapperFoodImg, 100, 100);
-	   	BufferedImage clapperObstacleImg= createImage("Images/branchesd-obs.png");
+	   	BufferedImage clapperObstacleImg= createImage("src/Images/branchesd-obs.png");
 	   	clapperObstacleImg = resize(clapperObstacleImg, 100, 100);
-		clapperMinimap = createImage("Images/mini.jpg");
+		clapperMinimap = createImage("src/Images/mini.jpg");
 		
-		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
+		BufferedImage nestpieceImg = createImage("src/Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
 	   	
-	   	BufferedImage nestImg = createImage("Images/nest.png");
+	   	BufferedImage nestImg = createImage("src/Images/nest.png");
 		nestImg = resize(nestImg, 100, 100);
 	   	
 		imgs.add(ospreyFoodImg);
@@ -119,6 +121,8 @@ public class View extends JFrame{
 			g.drawImage(ospreyMinimap, screenSize.width -260, screenSize.height - 375, 260, 314, this);
 			g.setColor(Color.RED);
 			g.fillOval(mapblipx, mapblipy, 15, 15);
+			
+			
 		}
 	}
 	
@@ -176,7 +180,6 @@ public class View extends JFrame{
 	}
 	
    public void displayQuiz() {
-	   System.out.println("In display quiz");
 	   QuizQ q = new QuizQ(bird.getMigratory());
 	   Answers[] options = q.getOptions();
 	   
@@ -186,8 +189,6 @@ public class View extends JFrame{
 	   JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 	   null, options, options[0]);
 	   
-	  System.out.println("Option chose:" + option);
-	  System.out.println("Correct Num: " + q.getCorrectAns(options).getNum());
 	    if (option != q.getCorrectAns(options).getNum()) { // answer submitted is not correct
 	    	JOptionPane.showMessageDialog(null, "Not Correct!");
 	    	q.setSubmitted(false);
@@ -240,12 +241,24 @@ public class View extends JFrame{
 		mapblipx = screenSize.width - 130;
 		mapblipy = screenSize.height - 60;
 		backspeed = 6;
+		
+		// Energy and Nest Progress bars:
+		
+		
 		energyBar = new JProgressBar(0, 100);
 		nestBar = new JProgressBar(0, 100);
 		energyBar.setValue(bird.energyLevel);
 		nestBar.setValue(0);
       	energyBar.setStringPainted(true); 
         nestBar.setStringPainted(true);
+        energyBar.setString(String.format("Energy: ",
+                energyBar.getValue()));
+        nestBar.setString(String.format("Nest Progress: ", nestBar.getValue()));
+        
+        
+        
+        
+        
         
 		frame.remove(menuPanel);
 		if (!bird.getMigratory()) {
