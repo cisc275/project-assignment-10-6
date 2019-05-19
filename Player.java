@@ -26,6 +26,10 @@ public class Player extends Sprite{
 		}
 	}
 	
+	public void revive() {
+		energyLevel = 50;
+	}
+	
 	public void buildNest() {
 		if (nestProgress < 100) {
 			nestProgress += 10;
@@ -40,7 +44,6 @@ public class Player extends Sprite{
 			}
 		}
 	}
-	
 	
 	public int getClapperImgWidth() {
 		return clapperImage.getWidth();

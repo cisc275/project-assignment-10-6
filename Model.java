@@ -27,6 +27,8 @@ public class Model {
 	private double lane4;
 	private double target;
 	private boolean moving = false;
+	
+	private int lock;
 
 
 	public Model(Dimension bounds, Player b, Nest n, ArrayList<BufferedImage> a) {
@@ -188,61 +190,83 @@ public class Model {
     } 
 	
 	public double randX() {
-        return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + screenSize.width; 
+        return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + (1.7 * screenSize.width); 
 	}
 
 	public void updateLocation() {
-		if(moving){
-			bird.yloc += yIncr;
-			if(bird.yloc == target){
-				yIncr = 0.0;
-				moving = false;			
-			}
-		} 
-		if (levelProgress <= 2) {
-			if(!sprites.isEmpty()) {
-				Iterator<Sprite> itr = sprites.iterator();
-				while(itr.hasNext()) {
-					Sprite s = itr.next();
-					s.xloc = s.xloc - (.4 * bird.energyLevel); 
-					if (s.xloc < -100) {
-						itr.remove();
-					}
+		if (!gameOver) {
+			if(moving){
+				bird.yloc += yIncr;
+				if(bird.yloc == target){
+					yIncr = 0.0;
+					moving = false;			
 				}
-				detectCollision();
+			} 
+			if (levelProgress <= 2) {
+				lock = 0;
+				if(!sprites.isEmpty()) {
+					Iterator<Sprite> itr = sprites.iterator();
+					while(itr.hasNext()) {
+						Sprite s = itr.next();
+						s.xloc = s.xloc - (.6 * bird.energyLevel); 
+						if (s.xloc < -100) {
+							itr.remove();
+						}
+					}
+					detectCollision();
+				}
+				else {
+					spawnObjects();
+					levelProgress++;
+					System.out.println("Level progress: " + levelProgress);
+				}
 			}
 			else {
-				spawnObjects();
-				levelProgress++;
-				System.out.println("Level progress: " + levelProgress);
+				if(lock == 0) {
+					sprites.clear();
+				}
+				if (!sprites.isEmpty()) {
+					nest.xloc = nest.xloc - 7;
+					detectCollision();
+				}
+				else {
+					nest.xloc = 1.1 * screenSize.width;
+					sprites.add(nest);
+					lock = 1;
+				}
 			}
-		}
-		else {
-			sprites.add(nest);
-			if (!gameOver) {
-				nest.xloc = nest.xloc - (.4 * bird.energyLevel);
-				detectCollision();
-				System.out.println(gameOver);
-			}
-		}
-		if (bird.isDead()) {
-			QuizQ quiz = new QuizQ(bird.getMigratory());
-			if (quiz.getSubmitted()) {
-				birdDead = false;
-				bird.resetDeath();
-				
-			} else {
-				birdDead = true;
-				bird.setDeath(true);
-				
+			if (bird.isDead()) {
+				QuizQ quiz = new QuizQ(bird.getMigratory());
+				if (quiz.getSubmitted()) {
+					birdDead = false;
+					bird.resetDeath();
+					
+				} else {
+					birdDead = true;
+					bird.setDeath(true);
+					
+				}
 			}
 		}
 	}
 	public Nest getNest() {
 		return nest;
 	}
+	
 	public ArrayList<Sprite> getSprites() {
 		return sprites;
+	}
+	
+	public boolean getGameOver() {
+		return gameOver;
+	}
+	
+	public void setGameOver(boolean g) {
+		gameOver = g;
+	}
+	
+	public void setLevelProgress(int n) {
+		levelProgress = n;
 	}
 	
 	public Player getPlayer() {
