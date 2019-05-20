@@ -7,16 +7,14 @@ import java.awt.image.BufferedImage;
 public class Player extends Sprite{
 	public int nestProgress = 0; //How far they have built the nest (0-100%)
 	public int energyLevel = 50; //0-100%
-	public BufferedImage clapperImage;
 	public boolean migratory;
 	public boolean dead;
 	//public QuizQ quiz;
 	
-	Player(double x, double y, BufferedImage img, BufferedImage img2) {
+	Player(double x, double y, BufferedImage img) {
 		xloc = x;
 		yloc = y;
 		Image = img;
-		clapperImage = img2;
 		type = "Player";
 	}
 	
@@ -27,7 +25,7 @@ public class Player extends Sprite{
 	}
 	
 	public void revive() {
-		energyLevel = 50;
+		energyLevel = 40;
 	}
 	
 	public void buildNest() {
@@ -38,19 +36,19 @@ public class Player extends Sprite{
 	
 	public void damage() {
 		if (energyLevel > 0) {
-			energyLevel -= 30;
-			if (energyLevel < 0) {
+			energyLevel -= 20;
+			if (energyLevel < 10) {
 				energyLevel = 0;
 			}
 		}
 	}
 	
-	public int getClapperImgWidth() {
-		return clapperImage.getWidth();
+	public int getImgWidth() {
+		return Image.getWidth();
 	}
 
-	public int getClapperImgHeight() {
-		return clapperImage.getHeight();
+	public int getImgHeight() {
+		return Image.getHeight();
 	}
 	
 	public void fatigue() {
