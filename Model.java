@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Scanner;
 import java.util.*;
 import java.awt.Color;
@@ -10,7 +11,7 @@ import java.awt.Dimension;
 //package birdyRun;
 
 
-public class Model {
+public class Model implements Serializable{
 	private int levelProgress = 0;
 	private ArrayList<Sprite> sprites = new ArrayList<>();
 	private Player bird;
@@ -54,6 +55,9 @@ public class Model {
 				o = new Rectangle((int)nest.xloc, 0, nest.getImgWidth(), screenSize.height);
 				if(o.intersects(p)) {
 					gameOver = true;
+					levelProgress= 0;
+					lock =0;
+					bird.energyLevel = 40;
 				}
 			}
 			else {
@@ -172,7 +176,7 @@ public class Model {
     } 
 	
 	public double randX() {
-        return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + (1.1 * screenSize.width); 
+        return (Math.random() *((screenSize.width * 2) + 1)) + (1.1 * screenSize.width); 
 	}
 
 	public void updateLocation() {
@@ -226,13 +230,19 @@ public class Model {
 				} else {
 					birdDead = true;
 					bird.setDeath(true);
-					
+					sprites.clear();
+					levelProgress = 0;
+					lock = 0;
+					bird.energyLevel = 40;
 				}
 			}
 		}
 	}
 	public Nest getNest() {
 		return nest;
+	}
+	public void setImgs(ArrayList<BufferedImage> i){
+		this.imgs = i;
 	}
 	
 	public ArrayList<Sprite> getSprites() {

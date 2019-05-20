@@ -10,6 +10,7 @@ public class Player extends Sprite{
 	public boolean migratory;
 	public boolean dead;
 	//public QuizQ quiz;
+	public boolean iframe = false;
 	
 	Player(double x, double y, BufferedImage img) {
 		xloc = x;
@@ -20,12 +21,13 @@ public class Player extends Sprite{
 	
 	public void regen() {
 		if (energyLevel < 100) {
-			energyLevel += 2;
+			energyLevel += 5;
 		}
 	}
 	
 	public void revive() {
 		energyLevel = 40;
+		iframe = false;
 	}
 	
 	public void buildNest() {

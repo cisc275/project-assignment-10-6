@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Sprite {
+public class Sprite implements Serializable {
 	public double xloc;
 	public double yloc;
 	public BufferedImage Image;

@@ -47,7 +47,7 @@ public class View extends JFrame{
 	int playersize = 200;
 	public boolean tutorial = true;
 	int step = 4;
-	
+	BufferedImage nestImg;
 	private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	private Player bird;
 	private QuizQ quiz;
@@ -67,7 +67,7 @@ public class View extends JFrame{
 	MenuPanel menuPanel;
 	JProgressBar energyBar;
 	JProgressBar nestBar;
-	
+	boolean quiztoggle = false;
 	
 	
 	
@@ -91,11 +91,11 @@ public class View extends JFrame{
 		clapperBackground = createImage("Images/Clapper_background.png");
 		clapperImg = createImage("Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
-	   	BufferedImage clapperFoodImg = createImage("Images/food_bfish.png");
-	   	clapperFoodImg = resize(clapperFoodImg, 100, 100);
-	   	BufferedImage clapperObstacleImg= createImage("Images/branchesd-obs.png");
+	   	BufferedImage clapperFoodImg = createImage("Images/food_crabcrd.png");
+	   	clapperFoodImg = resize(clapperFoodImg, 75, 75);
+	   	BufferedImage clapperObstacleImg= createImage("Images/clap_trap.png");
 	   	clapperObstacleImg = resize(clapperObstacleImg, 100, 100);
-		clapperMinimap = createImage("Images/mini.jpg");
+		clapperMinimap = createImage("Images/clap_mini.png");
 		
 		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
@@ -162,6 +162,7 @@ public class View extends JFrame{
 			
 		}
 	}
+	
 	public void tutorial(Graphics g) {
 			g.setFont(new Font("Courier", Font.BOLD,35));
 			if(bird.migratory)
@@ -210,9 +211,8 @@ public class View extends JFrame{
 	}
    
     public void update(ArrayList<Sprite> s, Player b, boolean g) {
-
-		gameOver = g;
-		if (gameOver) {
+    	gameOver = g;
+		if (g) {
 			removeGamePanel();
 		}
 		else {
@@ -223,15 +223,21 @@ public class View extends JFrame{
 			nestBar.setValue(bird.nestProgress);
 			
 			if(backx == -backspeed){
-				mapblipy -=10;
-				mapblipx += 3;
+				if(bird.getMigratory()) {
+					mapblipy -=12;
+					mapblipx += 5;
+				}
+				else {
+					mapblipy -=10;
+					mapblipx -= 7;
+				}
 			}
 			backx -= backspeed;
 			
 			drawPanel.repaint();
 			
 			
-			if (bird.isDead()) {
+			if (bird.isDead() && !quiztoggle) {//quiz toggle to prevent update from repeatedly activating a quiz
 				displayQuiz();
 				//b.resetDeath();
 			}
@@ -239,7 +245,7 @@ public class View extends JFrame{
 	}
 	
    public void displayQuiz() {
-
+	   quiztoggle = true;
 	   QuizQ q = new QuizQ(bird.getMigratory());
 	   Answers[] options = q.getOptions();
 	   
@@ -252,11 +258,13 @@ public class View extends JFrame{
 	    if (option != q.getCorrectAns(options).getNum()) { // answer submitted is not correct
 	    	JOptionPane.showMessageDialog(null, "Not Correct!");
 	    	q.setSubmitted(false);
+	    	sprites.clear();
 	    	removeGamePanel();
 	    } else {
 	    	JOptionPane.showMessageDialog(null, "Correct! Live Again!");
 	    	q.setSubmitted(true);
 	    	bird.revive();
+	    	quiztoggle = false;
 	    }
     }
     
@@ -294,8 +302,15 @@ public class View extends JFrame{
 	
 	public void removeMenu() {
 		backx = 0;
-		mapblipx = screenSize.width - 130;
-		mapblipy = screenSize.height - 60;
+
+		if (bird.getMigratory()) {
+			mapblipx = 130;
+			mapblipy = screenSize.height - 60;
+		}
+		else {
+			mapblipx = 170;
+			mapblipy = screenSize.height - 100;
+		}
 		backspeed = bird.energyLevel / 4;
 		
 		// Energy and Nest Progress bars:
@@ -334,7 +349,11 @@ public class View extends JFrame{
 		tutorial = true;
 		gameOver = false;
 		bird = new Player(screenSize.width / 10, screenSize.height / 2, ospreyImg);
+		nest = new Nest(1.1*screenSize.width, screenSize.height/2, nestImg);
+		quiztoggle = false;
 		sprites.clear();
+		backspeed = bird.energyLevel/4;
+		
 		frame.add(menuPanel);
 		frame.invalidate();
 		frame.validate();

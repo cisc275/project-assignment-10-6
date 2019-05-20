@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.*;
 //package birdyRun;
 
 import javax.swing.JTextArea;
 
-public class QuizQ {
+public class QuizQ implements Serializable{
 	
 	String question; // quizzes have questions, answers and wrong choices
 	//public char correctLetter;
@@ -29,7 +30,7 @@ public class QuizQ {
 	Answers[] anm0 = new Answers[] {new Answers(false, "Candy", 0), new Answers(true, "Fish",1), new Answers(false, "Insects",2), new Answers(false, "Fruit",3)};
 	Answers[] anm1 = new Answers[] {new Answers(true, "Near shallow bodies of water", 0), new Answers(false, "Near cities",1), new Answers(false, "On mountains",2), new Answers(false, "In deserts",3)};
 	Answers[] anm2 = new Answers[] {new Answers(false, "Flying", 0), new Answers(false, "Swimming",1), new Answers(true, "On the ground",2), new Answers(false, "Jumping",3)};
-	Answers[] anm3 = new Answers[] {new Answers(true, "Sticks", 0), new Answers(false, "Steel",1), new Answers(false, "Soil",2), new Answers(false, "Foam",3)};
+	Answers[] anm3 = new Answers[] {new Answers(true, "Vegetation", 0), new Answers(false, "Steel",1), new Answers(false, "Soil",2), new Answers(false, "Foam",3)};
 	Answers[] anm4 = new Answers[] {new Answers(false, "Migratory", 0), new Answers(true, "Nonmigratory",1), new Answers(false, "Both",2), new Answers(false, "Neither",3)};
 	
 	// Make a 2d array of all answers; each row is for the corresponding question, and each column is answer choices 1-4

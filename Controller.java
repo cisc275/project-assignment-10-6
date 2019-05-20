@@ -1,12 +1,13 @@
 //package birdyRun;
 
 import java.awt.event.*;
+import java.io.Serializable;
 import java.awt.EventQueue;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Timer;
 
-public class Controller implements KeyListener, ActionListener { 
+public class Controller implements KeyListener, ActionListener, Serializable { 
 	private Model model;
 	private View view;
 	int lastkey;
@@ -25,8 +26,11 @@ public class Controller implements KeyListener, ActionListener {
 	public void start(){
 		drawAction = new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
+
 				model.updateLocation();
-				view.update(model.getSprites(), model.getPlayer(), model.getGameOver());
+				if(!view.quiztoggle) {//do not update and recall quiz while quiz is in progress
+					view.update(model.getSprites(), model.getPlayer(), model.getGameOver());
+				}
 				model.setGameOver(view.getGameOver());
 			}
 		};
@@ -38,27 +42,15 @@ public class Controller implements KeyListener, ActionListener {
 		});
 	}
 	
-	public void startTutorial(){
-		drawAction = new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
 	
-			}
-		};
-		EventQueue.invokeLater(new Runnable(){
-			public void run(){
-				Timer t = new Timer(15, drawAction);
-				t.start();
-			}
-		});
-	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
-		if (key == KeyEvent.VK_UP) {
+		if (key == KeyEvent.VK_UP|| key == KeyEvent.VK_W) {
 			model.move("up");
 		}
-		else if (key == KeyEvent.VK_DOWN) {
+		else if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
 			model.move("down");
 		}
 		else if( key == KeyEvent.VK_SPACE) {
@@ -80,9 +72,11 @@ public class Controller implements KeyListener, ActionListener {
 		else if (action.equals("Osprey")) {
 			view.getPlayer().setMigratory(true);
 		}
+
         model.setLevelProgress(0);
 		view.removeMenu();
 		view.drawPanel.addKeyListener(this);
+        model.setImgs(view.getImgs());
 		start();
 		
 	}

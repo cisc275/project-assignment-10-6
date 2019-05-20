@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Answers {
+public class Answers implements Serializable{
 
 	boolean correct;
 	String ans;
