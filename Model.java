@@ -48,12 +48,8 @@ public class Model {
 			Sprite s = itr.next();
 			Rectangle p;
 			Rectangle o;
-			if (!bird.getMigratory()) {
-				p = new Rectangle((int)bird.xloc,(int)bird.yloc,bird.getClapperImgWidth(),bird.getClapperImgHeight());
-			}
-			else {
-				p = new Rectangle((int)bird.xloc,(int)bird.yloc,bird.getImgWidth(),bird.getImgHeight());
-			}
+			p = new Rectangle((int)bird.xloc,(int)bird.yloc,bird.getImgWidth(),bird.getImgHeight());
+
 			if (s.type.equals("Nest")) {
 				o = new Rectangle((int)nest.xloc, 0, nest.getImgWidth(), screenSize.height);
 				if(o.intersects(p)) {
@@ -63,23 +59,7 @@ public class Model {
 			else {
 				o = new Rectangle((int)s.xloc,(int)s.yloc,s.getImgWidth(),s.getImgHeight());
 				if (o.intersects(p)) {
-					if(!bird.getMigratory()) {
-						if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.clapperImage)) {
-							if (s.type.equals("Food")) {
-								bird.regen();
-								itr.remove();
-							}
-							else if (s.type.equals("NestPiece")) {
-								bird.buildNest();
-								itr.remove();
-							}
-							else if (s.type.equals("Obstacle")) {
-								bird.damage();
-								itr.remove();
-							}
-						}
-					}
-					else {
+					
 						if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
 							if (s.type.equals("Food")) {
 								bird.regen();
@@ -94,13 +74,15 @@ public class Model {
 								itr.remove();
 							}
 						}
+					
+						
 					}
 				}
-			}
+			
 		}
 	}
 	
-	
+	//Collision detection of images taking 2 objects' x's and y's and images. comparing for collision detection, updating "destruction"
 	public static boolean imageCollision(double x1, double y1, BufferedImage image1, double x2, double y2, BufferedImage image2) {
 		// initialization
 		double width1 = x1 + image1.getWidth() -1;
@@ -163,17 +145,17 @@ public class Model {
 			}
 		}
 	}
-	
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public void spawnObjects() {
 		if(!bird.isDead()) {
-			for(int i = 0; i < 15; i++) {
+			for(int i = 0; i < 10; i++) {
 				sprites.add(new Food(randX(), randY(), imgs.get(0))); 
 			}
 			
 			for(int i = 0; i < 7; i++) {
 				sprites.add(new Obstacle(randX(), randY(), imgs.get(1))); 
 			}
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < 2; i++) {
 				sprites.add(new NestPiece(randX(), randY(), imgs.get(2))); 
 			}
 		}
@@ -190,7 +172,7 @@ public class Model {
     } 
 	
 	public double randX() {
-        return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + (1.7 * screenSize.width); 
+        return (Math.random() * (((screenSize.width * 2) - screenSize.width) + 1)) + (1.1 * screenSize.width); 
 	}
 
 	public void updateLocation() {
@@ -202,13 +184,13 @@ public class Model {
 					moving = false;			
 				}
 			} 
-			if (levelProgress <= 2) {
+			if (levelProgress <= 5) {
 				lock = 0;
 				if(!sprites.isEmpty()) {
 					Iterator<Sprite> itr = sprites.iterator();
 					while(itr.hasNext()) {
 						Sprite s = itr.next();
-						s.xloc = s.xloc - (.6 * bird.energyLevel); 
+						s.xloc = s.xloc - (.25 * bird.energyLevel); 
 						if (s.xloc < -100) {
 							itr.remove();
 						}
