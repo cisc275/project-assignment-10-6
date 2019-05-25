@@ -30,14 +30,19 @@ public class Model implements Serializable{
 	private boolean moving = false;
 	
 	private int lock;
-
+	static final int bottomOfScreen = 0;
+	static final double stopMoving = 0.0;
+	static final int movementMultiplier = .25;
+	static final double offscreenMultiplier = 1.1;
+	static final int nestMovementSpeed = 7;
 
 	public Model(Dimension bounds, Player b, Nest n, ArrayList<BufferedImage> a) {
 		nest = n;
 		screenSize = bounds;
 		bird = b;
 		imgs = a;
-
+		
+		//screen split into four lanes
 		lane2 = (double)(screenSize.height / 4);
 		lane3 = (double)(screenSize.height / 2);
 		lane4 = (double)(screenSize.height*3 / 4);
@@ -45,16 +50,16 @@ public class Model implements Serializable{
 
 	public void detectCollision() {
 		Iterator<Sprite> itr = sprites.iterator();
-		while (itr.hasNext()) {
+		while (itr.hasNext()) {//iterates through the collection of sprites on screen (obstacles, food, nestpieces)
 			Sprite s = itr.next();
 			Rectangle p;
 			Rectangle o;
 			p = new Rectangle((int)bird.xloc,(int)bird.yloc,bird.getImgWidth(),bird.getImgHeight());
 
 			if (s.type.equals("Nest")) {
-				o = new Rectangle((int)nest.xloc, 0, nest.getImgWidth(), screenSize.height);
+				o = new Rectangle((int)nest.xloc, bottomOfScreen, nest.getImgWidth(), screenSize.height);//nest hitbox height is the entire screen so the player always hits it
 				if(o.intersects(p)) {
-					gameOver = true;
+					gameOver = true;//wants the player reaches the nest the game is over
 					levelProgress= 0;
 					lock =0;
 					bird.energyLevel = 40;
@@ -63,8 +68,10 @@ public class Model implements Serializable{
 			else {
 				o = new Rectangle((int)s.xloc,(int)s.yloc,s.getImgWidth(),s.getImgHeight());
 				if (o.intersects(p)) {
-					
+					//image collision is very taxing so we make a rectangle arpund each object and check if the player rectangle collides with the sprite rectangle
+					//if they do collide it checks if the actual images collides
 						if (imageCollision(s.xloc, s.yloc, s.Image, bird.xloc, bird.yloc, bird.Image)) {
+							//checks what type of sprite collided with the player and does there respective game mechanic and then removes the sprite from the collection
 							if (s.type.equals("Food")) {
 								bird.regen();
 								itr.remove();
@@ -88,6 +95,7 @@ public class Model implements Serializable{
 	
 	//Collision detection of images taking 2 objects' x's and y's and images. comparing for collision detection, updating "destruction"
 	public static boolean imageCollision(double x1, double y1, BufferedImage image1, double x2, double y2, BufferedImage image2) {
+		//iterates through the pixels of each image and if the pixel is not transparent then it has collided
 		// initialization
 		double width1 = x1 + image1.getWidth() -1;
         double height1 = y1 + image1.getHeight() -1;
@@ -124,38 +132,38 @@ public class Model implements Serializable{
 	}
 	
 	public void move(String x) {
-		if(!moving){
+		if(!moving){//if the player is not currently moving
 			if(x.equals("up")) {
-				if(bird.yloc <= lane1)
-					yIncr = 0.0;
+				if(bird.yloc <= lane1)//makes sure the player cant go above the screen
+					yIncr = stopMoving;
 				else{
-					yIncr = 0- (lane2 / 16); 
+					yIncr = 0- (lane2 / 16); //moves the player up a lane
 					moving = true;
 					target = bird.yloc - lane2; //minus 1/4 the screen
 				}	
 			}
 			else if (x.equals("down")) {
-				if(bird.yloc >= lane4)
-					yIncr = 0.0;
+				if(bird.yloc >= lane4)//makes sure player cant go below the screen
+					yIncr = stopMoving;
 				else{
-					yIncr = lane2 / 16;
+					yIncr = lane2 / 16;//moves the player down a lane
 					moving = true;
 					target = bird.yloc +lane2; // plus 1/4 the screen
 				}
 			}		
 			else if (x.equals("stop")) {
-				yIncr = 0.0;
+				yIncr = stopMoving;
 				moving = false;
 			}
 		}
 	}
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public void spawnObjects() {
+		//if the player is not dead spawn 10 food sprites, 7 obstacles sprites, and 2 nestpiece sprite
 		if(!bird.isDead()) {
 			for(int i = 0; i < 10; i++) {
 				sprites.add(new Food(randX(), randY(), imgs.get(0))); 
 			}
-			
 			for(int i = 0; i < 7; i++) {
 				sprites.add(new Obstacle(randX(), randY(), imgs.get(1))); 
 			}
@@ -166,6 +174,7 @@ public class Model implements Serializable{
 	}
 	
 	public double randY() { 
+		//randomly choses one of the lanes
 		List<Double> yValue = new ArrayList<>(); 
 		yValue.add(lane1);
 		yValue.add(lane2);
@@ -176,53 +185,54 @@ public class Model implements Serializable{
     } 
 	
 	public double randX() {
-        return (Math.random() *((screenSize.width * 2) + 1)) + (1.1 * screenSize.width); 
+		//randomly chooses and xcoordinate in the range of screenwidth to screenwidth * 2
+        return (Math.random() *((screenSize.width * 2) + 1)) + (offscreenMultiplier * screenSize.width); 
 	}
 
 	public void updateLocation() {
-		if (!gameOver) {
-			if(moving){
-				bird.yloc += yIncr;
-				if(bird.yloc == target){
-					yIncr = 0.0;
+		if (!gameOver) {//checks if player reached the nest
+			if(moving){//if the player is mvoeing up or down 
+				bird.yloc += yIncr;//sets the rate the player moves
+				if(bird.yloc == target){//if the player reaches the target lane stop moving
+					yIncr = stopMoving;
 					moving = false;			
 				}
 			} 
-			if (levelProgress <= 5) {
+			if (levelProgress <= 5) {//there is 5 waves
 				lock = 0;
-				if(!sprites.isEmpty()) {
+				if(!sprites.isEmpty()) {//if there are sprites still on screen
 					Iterator<Sprite> itr = sprites.iterator();
-					while(itr.hasNext()) {
+					while(itr.hasNext()) {//iterates through the spawned sprites and moves them a distance based on there energy level
 						Sprite s = itr.next();
-						s.xloc = s.xloc - (.25 * bird.energyLevel); 
+						s.xloc = s.xloc - (movementMultiplier * bird.energyLevel); 
 						if (s.xloc < -100) {
-							itr.remove();
+							itr.remove();//removes the sprite if it is 100 pixels behind the screen, so it removes it off screen
 						}
 					}
 					detectCollision();
 				}
 				else {
-					spawnObjects();
+					spawnObjects();//spawns sprites if all the sprites have been removes
 					levelProgress++;
 					System.out.println("Level progress: " + levelProgress);
 				}
 			}
 			else {
 				if(lock == 0) {
-					sprites.clear();
+					sprites.clear();//clears the sprite collection after wave 5 is spawned
 				}
 				if (!sprites.isEmpty()) {
-					nest.xloc = nest.xloc - 7;
+					nest.xloc = nest.xloc - nestMovementSpeed;//moves nest sprite across screen
 					detectCollision();
 				}
 				else {
-					nest.xloc = 1.1 * screenSize.width;
+					nest.xloc = offscreenMultiplier * screenSize.width;
 					sprites.add(nest);
 					lock = 1;
 				}
 			}
-			if (bird.isDead()) {
-				QuizQ quiz = new QuizQ(bird.getMigratory());
+			if (bird.isDead()) {//if bird is not dead
+				QuizQ quiz = new QuizQ(bird.getMigratory());//creates quiz based on the type of bird
 				if (quiz.getSubmitted()) {
 					birdDead = false;
 					bird.resetDeath();
@@ -238,6 +248,8 @@ public class Model implements Serializable{
 			}
 		}
 	}
+	
+	//rest are getters and setters
 	public Nest getNest() {
 		return nest;
 	}

@@ -69,16 +69,15 @@ public class View extends JFrame{
 	JProgressBar nestBar;
 	boolean quiztoggle = false;
 	
-	
-	
-	
 	public View() {
 		ImageIcon ospreyIcon = new ImageIcon("Images/ospreyIcon.png");
 		ImageIcon clapperrailIcon = new ImageIcon("Images/clapperrailIcon.png");
 		
+		//start buttons
 		startOsprey = new JButton("Play as an Osprey", ospreyIcon);
 		startClapper = new JButton("Play as a Clapper Rail", clapperrailIcon);
 		
+		//osprey images created here
 		ospreyBackground = createImage("Images/GameBackground.png");
 		ospreyImg = createImage("Images/osprey2d_img.png");
 	   	ospreyImg = resize(ospreyImg, 200, 200);
@@ -88,6 +87,7 @@ public class View extends JFrame{
 	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
 		ospreyMinimap = createImage("Images/mini.jpg");
 		
+		//clapper rail images created here
 		clapperBackground = createImage("Images/Clapper_background.png");
 		clapperImg = createImage("Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
@@ -105,6 +105,8 @@ public class View extends JFrame{
 	   	
 		startClapper.setPreferredSize(new Dimension(500, 500));
 		startOsprey.setPreferredSize(new Dimension(500, 500));
+		
+		//adds the images to a bufferedImage array
 		imgO.add(ospreyFoodImg);
 		imgO.add(ospreyObstacleImg);
 		imgO.add(nestpieceImg);
@@ -118,6 +120,7 @@ public class View extends JFrame{
 		imgC.add(clapperMinimap);
 		imgs = imgO;
 		
+		//creates a player and nest sprite
 		bird = new Player(screenSize.width / 10, screenSize.height / 2, ospreyImg);
 		nest = new Nest(1.1*screenSize.width, screenSize.height/2, nestImg);
 		
@@ -143,14 +146,15 @@ public class View extends JFrame{
 		
 			super.paintComponent(g);
 			g.drawImage(imgs.get(3), backx, 0, screenSize.width, screenSize.height,  this);
+			//second backgorund image so it can scroll
 			g.drawImage(imgs.get(3), backx+screenSize.width, 0, screenSize.width, screenSize.height,  this);
-			if(backx <= 0 - screenSize.width)
+			if(backx <= 0 - screenSize.width)//moves the backgorund across the screen
 				backx = 0;
 			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, bird.Image.getWidth(), bird.Image.getHeight(),  this);
 			g.drawImage(imgs.get(4), 0, screenSize.height - 375, 260, 314, this);
 			g.setColor(Color.RED);
 			g.fillOval(mapblipx, mapblipy, 15, 15);
-			if(tutorial) 
+			if(tutorial) //draws the tutorial
 				tutorial(g);
 			else {
 				step = 4;//reset tutorial steps
@@ -164,6 +168,7 @@ public class View extends JFrame{
 	}
 	
 	public void tutorial(Graphics g) {
+		//draws the tutorial to teach the player
 			g.setFont(new Font("Courier", Font.BOLD,35));
 			if(bird.migratory)
 				g.drawString("This is You, a Mighty OSPREY, you're on a long journey home", 350, (int)screenSize.getHeight() *4/5);
@@ -211,9 +216,10 @@ public class View extends JFrame{
 	}
    
     public void update(ArrayList<Sprite> s, Player b, boolean g) {
+		//gets the updated locations of the sprites and player, and gets the game status from model
     	gameOver = g;
 		if (g) {
-			removeGamePanel();
+			removeGamePanel();//if the game is over remove the game panel and add the menupanel
 		}
 		else {
 			sprites = s;
@@ -224,6 +230,7 @@ public class View extends JFrame{
 			
 			if(backx == -backspeed){
 				if(bird.getMigratory()) {
+					//moves the minimap icon
 					mapblipy -=12;
 					mapblipx += 5;
 				}
@@ -245,6 +252,7 @@ public class View extends JFrame{
 	}
 	
    public void displayQuiz() {
+	   //creates a JOptionPane that contains a quiz
 	   quiztoggle = true;
 	   QuizQ q = new QuizQ(bird.getMigratory());
 	   Answers[] options = q.getOptions();
@@ -288,6 +296,7 @@ public class View extends JFrame{
 
 	
 	private static BufferedImage resize(BufferedImage img, int height, int width) {
+		//resizes the image so they are all around the same size
 		Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resized.createGraphics();
@@ -303,7 +312,7 @@ public class View extends JFrame{
 	public void removeMenu() {
 		backx = 0;
 
-		if (bird.getMigratory()) {
+		if (bird.getMigratory()) {//sets minimap icon start location
 			mapblipx = 130;
 			mapblipy = screenSize.height - 60;
 		}

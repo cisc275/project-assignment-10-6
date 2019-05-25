@@ -12,6 +12,7 @@ public class Controller implements KeyListener, ActionListener, Serializable {
 	private View view;
 	int lastkey;
 	Action drawAction;
+	static final int refreshRate = 15;
 	
 	
 	public Controller(){
@@ -31,13 +32,13 @@ public class Controller implements KeyListener, ActionListener, Serializable {
 				if(!view.quiztoggle) {//do not update and recall quiz while quiz is in progress
 					view.update(model.getSprites(), model.getPlayer(), model.getGameOver());
 				}
-				model.setGameOver(view.getGameOver());
+				model.setGameOver(view.getGameOver());//gets game status frome view and sets it in model
 			}
 		};
 		EventQueue.invokeLater(new Runnable(){
 			public void run(){
-				Timer t = new Timer(15, drawAction);
-				t.start();
+				Timer t = new Timer(refreshRate, drawAction);//timer to update game every 15 milliseconds
+				t.start();//starts the game
 			}
 		});
 	}
@@ -67,17 +68,16 @@ public class Controller implements KeyListener, ActionListener, Serializable {
 	public void actionPerformed(ActionEvent ae) {
 		String action = ae.getActionCommand();
         if (action.equals("Clapper Rail")) {
-			view.getPlayer().setMigratory(false);
+			view.getPlayer().setMigratory(false);//sets the clapper rail game
         }
 		else if (action.equals("Osprey")) {
-			view.getPlayer().setMigratory(true);
+			view.getPlayer().setMigratory(true);//sets the Osprey game
 		}
 
-        model.setLevelProgress(0);
-		view.removeMenu();
+        model.setLevelProgress(0);//resets the level progress everytime a game is started
+		view.removeMenu();//removes menu panel and adds the game panel(osprey or clapper rail)
 		view.drawPanel.addKeyListener(this);
-        model.setImgs(view.getImgs());
+        model.setImgs(view.getImgs());//gets the bufferedimgs from view and sets it in the model
 		start();
-		
 	}
 }

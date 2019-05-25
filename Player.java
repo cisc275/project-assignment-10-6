@@ -11,6 +11,13 @@ public class Player extends Sprite{
 	public boolean dead;
 	//public QuizQ quiz;
 	public boolean iframe = false;
+	public final int maxHealth = 100;
+	public final int healthIncrease = 5;
+	public final int respawnHealth = 40;
+	public final int maxNestProgress = 100;
+	public final int nestBuildIncrease = 10;
+	public final int minEnergyLevel = 0;
+	public final int obstacleDamage = 20;
 	
 	Player(double x, double y, BufferedImage img) {
 		xloc = x;
@@ -19,28 +26,29 @@ public class Player extends Sprite{
 		type = "Player";
 	}
 	
+	//all the game mechanics for each of the spites(food = regen, nestpiece = build nest, obstacle = damage, correct quiz answer = revive)
 	public void regen() {
-		if (energyLevel < 100) {
-			energyLevel += 5;
+		if (energyLevel < maxHealth) {
+			energyLevel += healthIncrease;
 		}
 	}
 	
 	public void revive() {
-		energyLevel = 40;
+		energyLevel = respawnHealth;
 		iframe = false;
 	}
 	
 	public void buildNest() {
-		if (nestProgress < 100) {
-			nestProgress += 10;
+		if (nestProgress < maxNestProgress) {
+			nestProgress += nestBuildIncrease;
 		}
 	}
 	
 	public void damage() {
-		if (energyLevel > 0) {
-			energyLevel -= 20;
+		if (energyLevel > minEnergyLevel) {
+			energyLevel -= obstacleDamage;
 			if (energyLevel < 10) {
-				energyLevel = 0;
+				energyLevel = minEnergyLevel;
 			}
 		}
 	}
