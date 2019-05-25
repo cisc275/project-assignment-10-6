@@ -5,7 +5,7 @@ public class Answers implements Serializable{
 	boolean correct;
 	String ans;
 	int num;
-	
+	//answers for the game, whether they are right and question number
 	public Answers(boolean correct, String ans, int num) {
 		this.correct = correct;
 		this.ans = ans;
