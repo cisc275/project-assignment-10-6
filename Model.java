@@ -32,7 +32,7 @@ public class Model implements Serializable{
 	private int lock;
 	static final int bottomOfScreen = 0;
 	static final double stopMoving = 0.0;
-	static final int movementMultiplier = .25;
+	static final double movementMultiplier = 0.25;
 	static final double offscreenMultiplier = 1.1;
 	static final int nestMovementSpeed = 7;
 
@@ -162,13 +162,27 @@ public class Model implements Serializable{
 		//if the player is not dead spawn 10 food sprites, 7 obstacles sprites, and 2 nestpiece sprite
 		if(!bird.isDead()) {
 			for(int i = 0; i < 10; i++) {
-				sprites.add(new Food(randX(), randY(), imgs.get(0))); 
+				double temp = randY();
+				if (temp <= lane3) 
+					sprites.add(new Food(randX(), temp, imgs.get(1))); 
+				else 
+					sprites.add(new Food(randX(), temp, imgs.get(0))); 
+				
 			}
 			for(int i = 0; i < 7; i++) {
-				sprites.add(new Obstacle(randX(), randY(), imgs.get(1))); 
+				double temp = randY();
+				System.out.println(temp);
+				if (temp <= lane1)
+					sprites.add(new Obstacle(randX(), temp, imgs.get(4))); 
+				else if (temp <= lane2)
+					sprites.add(new Obstacle(randX(), temp, imgs.get(2))); 
+				else if (temp <= lane3)
+					sprites.add(new Obstacle(randX(), temp, imgs.get(3)));
+				else
+					sprites.add(new Obstacle(randX(), temp, imgs.get(5))); 
 			}
 			for(int i = 0; i < 2; i++) {
-				sprites.add(new NestPiece(randX(), randY(), imgs.get(2))); 
+				sprites.add(new NestPiece(randX(), randY(), imgs.get(6))); 
 			}
 		}
 	}
@@ -240,10 +254,10 @@ public class Model implements Serializable{
 				} else {
 					birdDead = true;
 					bird.setDeath(true);
-					sprites.clear();
+					/*sprites.clear();
 					levelProgress = 0;
 					lock = 0;
-					bird.energyLevel = 40;
+					bird.energyLevel = 40;*/
 				}
 			}
 		}

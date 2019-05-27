@@ -33,10 +33,13 @@ import javax.swing.ImageIcon;
 public class View extends JFrame{
 	
 	private BufferedImage ospreyBackground;
+	private BufferedImage ospreyBackground2;
 	private BufferedImage clapperBackground;
+	private BufferedImage clapperBackground2;
 	private BufferedImage endGameBackground;
 	public int backx;
 	public int backspeed;	//match to sprite scroll speed
+	private boolean toggle = false;
 	private BufferedImage ospreyMinimap;
 	private BufferedImage clapperMinimap;
 	public int mapblipx;
@@ -78,50 +81,74 @@ public class View extends JFrame{
 		startClapper = new JButton("Play as a Clapper Rail", clapperrailIcon);
 		
 		//osprey images created here
-		ospreyBackground = createImage("Images/GameBackground.png");
+		ospreyBackground = createImage("Images/GameBackground.jpg");
+		ospreyBackground2 = createImage("Images/GameBackgroundFl.jpg");//flipped
 		ospreyImg = createImage("Images/osprey2d_img.png");
 	   	ospreyImg = resize(ospreyImg, 200, 200);
 	   	BufferedImage ospreyFoodImg = createImage("Images/food_bfish.png");
+	   	BufferedImage ospreyFoodImg2 = createImage("Images/birdprey.png");
 	   	ospreyFoodImg = resize(ospreyFoodImg, 100, 100);
-	   	BufferedImage ospreyObstacleImg= createImage("Images/branchesd-obs.png");
-	   	ospreyObstacleImg = resize(ospreyObstacleImg, 100, 100);
+	   	ospreyFoodImg2 = resize(ospreyFoodImg2, 60, 60);
 		ospreyMinimap = createImage("Images/mini.jpg");
 		
 		//clapper rail images created here
-		clapperBackground = createImage("Images/Clapper_background.png");
+		clapperBackground = createImage("Images/clapback.jpg");
+		clapperBackground2 = createImage("Images/clapbackfl.jpg");
 		clapperImg = createImage("Images/clapper_rail.png");
 	   	clapperImg = resize(clapperImg, 200, 200);
 	   	BufferedImage clapperFoodImg = createImage("Images/food_crabcrd.png");
 	   	clapperFoodImg = resize(clapperFoodImg, 75, 75);
-	   	BufferedImage clapperObstacleImg= createImage("Images/clap_trap.png");
-	   	clapperObstacleImg = resize(clapperObstacleImg, 100, 100);
+	   	BufferedImage clapperFoodImg2 = createImage("Images/seedfood.png");
+	   	clapperFoodImg2 = resize(clapperFoodImg2, 75, 75);
+	   	
+	   	BufferedImage obstacle1= createImage("Images/branchesd-obs.png");
+	   	obstacle1 = resize(obstacle1, 100, 100);
+	   	BufferedImage obstacle2= createImage("Images/clap_trap.png");
+	   	obstacle2 = resize(obstacle2, 100, 100);
 		clapperMinimap = createImage("Images/clap_mini.png");
+		BufferedImage obstacle3 = createImage("Images/plane_pic.png");
+		obstacle3 = resize(obstacle3, 100, 100);
+		BufferedImage obstacle4 = createImage("Images/litter.png");
+		obstacle4 = resize(obstacle4, 100, 100);
 		
 		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
+	   	BufferedImage nestpieceImg2 = createImage("Images/clapgrass.jpg");
+	   	nestpieceImg2 = resize(nestpieceImg2, 100, 100);
 	   	
 	   	BufferedImage nestImg = createImage("Images/nest.png");
-		nestImg = resize(nestImg, 400, 400);
+		nestImg = resize(nestImg, 400, 700);
 	   	
 		startClapper.setPreferredSize(new Dimension(500, 500));
 		startOsprey.setPreferredSize(new Dimension(500, 500));
 		
-		//adds the images to a bufferedImage array
-		imgO.add(ospreyFoodImg);
-		imgO.add(ospreyObstacleImg);
-		imgO.add(nestpieceImg);
-		imgO.add(ospreyBackground);
-		imgO.add(ospreyMinimap);
+		//adds the images to a bufferedImage arrays
+		
+		imgO.add(ospreyFoodImg);//food 0-1
+		imgO.add(ospreyFoodImg2);
+		imgO.add(obstacle1);//obstacle 2-5
+		imgO.add(obstacle2);
+		imgO.add(obstacle3);
+		imgO.add(obstacle4);
+		imgO.add(nestpieceImg);//nest 6
+		imgO.add(ospreyBackground);//background 7-8
+		imgO.add(ospreyBackground2);
+		imgO.add(ospreyMinimap);//minimap 9
 		
 		imgC.add(clapperFoodImg);
-		imgC.add(clapperObstacleImg);
-		imgC.add(nestpieceImg);
+		imgC.add(clapperFoodImg2);
+		imgC.add(obstacle1);
+		imgC.add(obstacle2);
+		imgC.add(obstacle3);
+		imgC.add(obstacle4);
+		imgC.add(nestpieceImg2);
 		imgC.add(clapperBackground);
+		imgC.add(clapperBackground2);
 		imgC.add(clapperMinimap);
 		imgs = imgO;
 		
 		//creates a player and nest sprite
-		bird = new Player(screenSize.width / 10, screenSize.height / 2, ospreyImg);
+		bird = new Player(screenSize.width / 8, screenSize.height / 2, ospreyImg);
 		nest = new Nest(1.1*screenSize.width, screenSize.height/2, nestImg);
 		
 		menuPanel = new MenuPanel();
@@ -145,13 +172,24 @@ public class View extends JFrame{
 		protected void paintComponent(Graphics g) {
 		
 			super.paintComponent(g);
-			g.drawImage(imgs.get(3), backx, 0, screenSize.width, screenSize.height,  this);
-			//second backgorund image so it can scroll
-			g.drawImage(imgs.get(3), backx+screenSize.width, 0, screenSize.width, screenSize.height,  this);
-			if(backx <= 0 - screenSize.width)//moves the backgorund across the screen
+			if(toggle) {
+				g.drawImage(imgs.get(7), backx, 0, screenSize.width, screenSize.height,  this);
+				//second backgorund image so it can scroll
+				g.drawImage(imgs.get(8), backx + screenSize.width, 0, screenSize.width, screenSize.height,  this);
+			}
+			else {
+				g.drawImage(imgs.get(8), backx, 0, screenSize.width, screenSize.height,  this);
+
+				g.drawImage(imgs.get(7), backx + screenSize.width, 0, screenSize.width, screenSize.height,  this);
+			}
+			
+			if(backx <= 0 -screenSize.width) {
 				backx = 0;
+				toggle = !toggle;
+			}
+			
 			g.drawImage(bird.Image, (int)bird.xloc, (int)bird.yloc, bird.Image.getWidth(), bird.Image.getHeight(),  this);
-			g.drawImage(imgs.get(4), 0, screenSize.height - 375, 260, 314, this);
+			g.drawImage(imgs.get(9), 0, screenSize.height - 375, 260, 314, this);
 			g.setColor(Color.RED);
 			g.fillOval(mapblipx, mapblipy, 15, 15);
 			if(tutorial) //draws the tutorial
@@ -187,12 +225,12 @@ public class View extends JFrame{
 				
 		} if(step <=3) {
 				g.drawString("Collect Nest Pieces", (int)screenSize.getWidth() * 2/3 - 40, (int)screenSize.getHeight() /4 - 40);
-				NestPiece y = new NestPiece(screenSize.getWidth() * 2/3, screenSize.getHeight() /4, imgs.get(2));
+				NestPiece y = new NestPiece(screenSize.getWidth() * 2/3, screenSize.getHeight() /4, imgs.get(6));
 				g.drawImage(y.Image, (int)y.xloc, (int)y.yloc, y.getImgWidth(), y.getImgHeight(),  this);
 				
 		} if (step <= 2) {
 				g.drawString("Avoid Dangers", (int)screenSize.getWidth() * 1/4, (int)screenSize.getHeight() *1/4);
-				Obstacle z = new Obstacle(screenSize.getWidth() * 1/4, screenSize.getHeight() *1/4, imgs.get(1));
+				Obstacle z = new Obstacle(screenSize.getWidth() * 1/4, screenSize.getHeight() *1/4, imgs.get(4));
 				g.drawImage(z.Image, (int)z.xloc, (int)z.yloc, z.getImgWidth(), z.getImgHeight(),  this);
 				
 		} if (step == 1) {g.drawString("Simply fly UP and DOWN with the arrow keys", (int)screenSize.getWidth() /2 -200, (int)screenSize.getHeight() *3/5);
@@ -240,7 +278,7 @@ public class View extends JFrame{
 				}
 			}
 			backx -= backspeed;
-			
+			backspeed = bird.energyLevel / 4;
 			drawPanel.repaint();
 			
 			
@@ -320,13 +358,15 @@ public class View extends JFrame{
 			mapblipx = 170;
 			mapblipy = screenSize.height - 100;
 		}
-		backspeed = bird.energyLevel / 4;
+		
 		
 		// Energy and Nest Progress bars:
 		energyBar = new JProgressBar(0, 100);
 		nestBar = new JProgressBar(0, 100);
 		energyBar.setValue(bird.energyLevel);
+		energyBar.setPreferredSize(new Dimension(screenSize.width /5, 50));
 		nestBar.setValue(0);
+		nestBar.setPreferredSize(new Dimension(screenSize.width /5, 50));
       	energyBar.setStringPainted(true); 
         nestBar.setStringPainted(true);
         energyBar.setString(String.format("Energy: ", bird.energyLevel));

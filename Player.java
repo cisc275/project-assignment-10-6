@@ -15,7 +15,7 @@ public class Player extends Sprite{
 	public final int healthIncrease = 5;
 	public final int respawnHealth = 40;
 	public final int maxNestProgress = 100;
-	public final int nestBuildIncrease = 10;
+	public final int nestBuildIncrease = 20;
 	public final int minEnergyLevel = 0;
 	public final int obstacleDamage = 20;
 	
