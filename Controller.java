@@ -14,7 +14,7 @@ public class Controller implements KeyListener, ActionListener, Serializable {
 	Action drawAction;
 	static final int refreshRate = 15;
 	
-	
+	//a View and Model, plus listeners. The model is passed screen data which affect image sizes when players and sprites are generated in teh view for model to calculate.
 	public Controller(){
 		view = new View();
 		model = new Model(view.getScreenSize(), view.getPlayer(), view.getNest(), view.getImgs());
@@ -37,14 +37,14 @@ public class Controller implements KeyListener, ActionListener, Serializable {
 		};
 		EventQueue.invokeLater(new Runnable(){
 			public void run(){
-				Timer t = new Timer(refreshRate, drawAction);//timer to update game every 15 milliseconds
+				Timer t = new Timer(refreshRate, drawAction);//timer to update game every 15 milliseconds - editable as refreshrate
 				t.start();//starts the game
 			}
 		});
 	}
 	
 	
-	
+	//keylistener events. only inputs are up down and boolean tutorial ender
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
@@ -60,11 +60,11 @@ public class Controller implements KeyListener, ActionListener, Serializable {
 			}
 		}
 	}
-	
+	//became disused over iterations
 	public void keyReleased(KeyEvent e) {}
-	
 	public void keyTyped(KeyEvent e) {}
 	
+	//events for buttons in the menu being clicked
 	public void actionPerformed(ActionEvent ae) {
 		String action = ae.getActionCommand();
         if (action.equals("Clapper Rail")) {

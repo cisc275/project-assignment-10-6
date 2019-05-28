@@ -32,26 +32,28 @@ public class Player extends Sprite{
 			energyLevel += healthIncrease;
 		}
 	}
-	
+	//called on correct quiz result
 	public void revive() {
 		energyLevel = respawnHealth;
 		iframe = false;
 	}
-	
+	//nest progress is just a bar, so we update. future potential for visualizing the building of nest.
 	public void buildNest() {
 		if (nestProgress < maxNestProgress) {
 			nestProgress += nestBuildIncrease;
 		}
 	}
-	
+	//taking damage reduces energy, cuts off at a certain point to prevent going too slowly
 	public void damage() {
 		if (energyLevel > minEnergyLevel) {
 			energyLevel -= obstacleDamage;
-			if (energyLevel < 10) {
+			if (energyLevel < 15) {
 				energyLevel = minEnergyLevel;
 			}
 		}
 	}
+	
+	
 	
 	public int getImgWidth() {
 		return Image.getWidth();

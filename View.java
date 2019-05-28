@@ -31,12 +31,12 @@ import java.awt.AWTKeyStroke;
 import javax.swing.ImageIcon;
 
 public class View extends JFrame{
-	
+	public int padding =25;
 	private BufferedImage ospreyBackground;
 	private BufferedImage ospreyBackground2;
 	private BufferedImage clapperBackground;
 	private BufferedImage clapperBackground2;
-	private BufferedImage endGameBackground;
+	private BufferedImage startGameBackground;
 	public int backx;
 	public int backspeed;	//match to sprite scroll speed
 	private boolean toggle = false;
@@ -72,6 +72,7 @@ public class View extends JFrame{
 	JProgressBar nestBar;
 	boolean quiztoggle = false;
 	
+	//constructor gradually builds cache of images, buttons and panels, 
 	public View() {
 		ImageIcon ospreyIcon = new ImageIcon("Images/ospreyIcon.png");
 		ImageIcon clapperrailIcon = new ImageIcon("Images/clapperrailIcon.png");
@@ -79,7 +80,9 @@ public class View extends JFrame{
 		//start buttons
 		startOsprey = new JButton("Play as an Osprey", ospreyIcon);
 		startClapper = new JButton("Play as a Clapper Rail", clapperrailIcon);
-		
+		//start screen
+		//BufferedImage startGameBackground = createImage("Images/startscreen.png"); not implemented
+
 		//osprey images created here
 		ospreyBackground = createImage("Images/GameBackground.jpg");
 		ospreyBackground2 = createImage("Images/GameBackgroundFl.jpg");//flipped
@@ -113,17 +116,16 @@ public class View extends JFrame{
 		
 		BufferedImage nestpieceImg = createImage("Images/crd_nestpiece.png");
 	   	nestpieceImg = resize(nestpieceImg, 100, 100);
-	   	BufferedImage nestpieceImg2 = createImage("Images/clapgrass.jpg");
+	   	BufferedImage nestpieceImg2 = createImage("Images/clapgrass.png");
 	   	nestpieceImg2 = resize(nestpieceImg2, 100, 100);
 	   	
 	   	BufferedImage nestImg = createImage("Images/nest.png");
 		nestImg = resize(nestImg, 400, 700);
 	   	
-		startClapper.setPreferredSize(new Dimension(500, 500));
-		startOsprey.setPreferredSize(new Dimension(500, 500));
-		
-		//adds the images to a bufferedImage arrays
-		
+		startClapper.setPreferredSize(new Dimension(screenSize.width /2-padding, screenSize.height-padding));
+		startOsprey.setPreferredSize(new Dimension(screenSize.width /2 -padding, screenSize.height-padding));
+	
+		//adds the images to a bufferedImage arrays	
 		imgO.add(ospreyFoodImg);//food 0-1
 		imgO.add(ospreyFoodImg2);
 		imgO.add(obstacle1);//obstacle 2-5
@@ -152,13 +154,14 @@ public class View extends JFrame{
 		nest = new Nest(1.1*screenSize.width, screenSize.height/2, nestImg);
 		
 		menuPanel = new MenuPanel();
-		menuPanel.setBackground(Color.BLUE);
+		menuPanel.setBackground(Color.blue);
 
 		startClapper.setActionCommand("Clapper Rail");
 		startOsprey.setActionCommand("Osprey");
-
+		
 		menuPanel.add(startOsprey);
 		menuPanel.add(startClapper);
+
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -167,6 +170,7 @@ public class View extends JFrame{
 		frame.setVisible(true);
 	}
 	
+	//Takes the panel, draws to it, updates certain elements based on view, including minimap blip
 	@SuppressWarnings("serial")
 	public class DrawPanel extends JPanel {
 		protected void paintComponent(Graphics g) {
@@ -205,6 +209,7 @@ public class View extends JFrame{
 		}
 	}
 	
+	//helper function for tutorialization, simple graphics drawing with boolean exit
 	public void tutorial(Graphics g) {
 		//draws the tutorial to teach the player
 			g.setFont(new Font("Courier", Font.BOLD,35));
@@ -214,7 +219,7 @@ public class View extends JFrame{
 				g.drawString("This is You, a CLAPPER RAIL, living your life, minding your business", 350, (int)screenSize.getHeight() *4/5);
 			
 			try {
-				Thread.sleep(2000);//increase/decrease "speed"
+				Thread.sleep(1000);//increase/decrease "speed"
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -233,30 +238,37 @@ public class View extends JFrame{
 				Obstacle z = new Obstacle(screenSize.getWidth() * 1/4, screenSize.getHeight() *1/4, imgs.get(4));
 				g.drawImage(z.Image, (int)z.xloc, (int)z.yloc, z.getImgWidth(), z.getImgHeight(),  this);
 				
-		} if (step == 1) {g.drawString("Simply fly UP and DOWN with the arrow keys", (int)screenSize.getWidth() /2 -200, (int)screenSize.getHeight() *3/5);
-					g.drawString("Press Space to begin", (int)screenSize.getWidth() /2 - 100, (int)screenSize.getHeight() *3/5 + 50);
+		} if (step == 1) {g.drawString("Simply fly UP and DOWN with the arrow keys", (int)screenSize.getWidth() /2 -500, (int)screenSize.getHeight() *3/5);
+					g.drawString("Press Space to begin", (int)screenSize.getWidth() /2 - 400, (int)screenSize.getHeight() *3/5 + 50);
 					step++;
 		} if (step == 0) {tutorial =false;}
 		step--;
 
-		
 		repaint();
 			
 	}
 	
 	
-	
+	//the menu panel is built of its elements, painted here
 	@SuppressWarnings("serial")
 	public class MenuPanel extends JPanel {
 		protected void paintComponent(Graphics g) {
+			g.drawImage(startGameBackground,0,0,this);
 			super.paintComponent(g);
+			
 		}
 	}
    
+	//update, the hub of all image movement functionality, access to model's gameover condition, the player, and all sprites
     public void update(ArrayList<Sprite> s, Player b, boolean g) {
 		//gets the updated locations of the sprites and player, and gets the game status from model
-    	gameOver = g;
+    		gameOver = g;
+		if(bird.migratory)
+			imgs =imgO;
+		else
+			imgs = imgC;
 		if (g) {
+			
 			removeGamePanel();//if the game is over remove the game panel and add the menupanel
 		}
 		else {
@@ -281,14 +293,14 @@ public class View extends JFrame{
 			backspeed = bird.energyLevel / 4;
 			drawPanel.repaint();
 			
-			
-			if (bird.isDead() && !quiztoggle) {//quiz toggle to prevent update from repeatedly activating a quiz
+			//always ready to call quiz, on death
+			if (bird.isDead() && !quiztoggle) {
 				displayQuiz();
-				//b.resetDeath();
+				//b.resetDeath();can have unintended effect of multiple quiz questions.
 			}
 		}
 	}
-	
+	//quiz elements, option panes filled by QuizQs and bird/player consequences
    public void displayQuiz() {
 	   //creates a JOptionPane that contains a quiz
 	   quiztoggle = true;
@@ -314,6 +326,7 @@ public class View extends JFrame{
 	    }
     }
     
+   //image generator function
 	private BufferedImage createImage(String img) {
     	BufferedImage bufferedImage;
     	try {
@@ -330,9 +343,8 @@ public class View extends JFrame{
 	public static void main(String[] args) {
 		Controller a = new Controller();
 	}
-	
 
-	
+	//image resizing function, for scaling
 	private static BufferedImage resize(BufferedImage img, int height, int width) {
 		//resizes the image so they are all around the same size
 		Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -343,10 +355,13 @@ public class View extends JFrame{
 		return resized;
 	}
 
+	
+	
 	public Dimension getScreenSize() {
 		return screenSize;
 	}
 	
+	//function to exit main menu, menu is called by menupanel, removed here
 	public void removeMenu() {
 		backx = 0;
 
@@ -358,7 +373,6 @@ public class View extends JFrame{
 			mapblipx = 170;
 			mapblipy = screenSize.height - 100;
 		}
-		
 		
 		// Energy and Nest Progress bars:
 		energyBar = new JProgressBar(0, 100);
@@ -393,6 +407,7 @@ public class View extends JFrame{
 		frame.repaint();
 	}
 
+	//exit game, return to menu panel
 	public void removeGamePanel() {
 		frame.remove(drawPanel);
 		tutorial = true;
@@ -409,6 +424,9 @@ public class View extends JFrame{
 		frame.repaint();
 	}
 
+	
+	
+	
 	public ArrayList<BufferedImage> getImgs() {
 		return imgs;
 	}

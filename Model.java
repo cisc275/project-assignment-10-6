@@ -35,7 +35,12 @@ public class Model implements Serializable{
 	static final double movementMultiplier = 0.25;
 	static final double offscreenMultiplier = 1.1;
 	static final int nestMovementSpeed = 7;
+	static final int waves = 4;
+	static final int foodNum = 8;
+	static final int obsNum = 7;
+	static final int nestNum = 2;
 
+	//size morphs lanes otherwise they'd be constant. the rest is passed nest, player, and sprites
 	public Model(Dimension bounds, Player b, Nest n, ArrayList<BufferedImage> a) {
 		nest = n;
 		screenSize = bounds;
@@ -48,6 +53,7 @@ public class Model implements Serializable{
 		lane4 = (double)(screenSize.height*3 / 4);
 	}
 
+	//collision detection based on images and rectangles, resulting effects called, like energy level changes
 	public void detectCollision() {
 		Iterator<Sprite> itr = sprites.iterator();
 		while (itr.hasNext()) {//iterates through the collection of sprites on screen (obstacles, food, nestpieces)
@@ -131,9 +137,11 @@ public class Model implements Serializable{
 		return false;
 	}
 	
+	//player movement, as called by controller keylisteners
 	public void move(String x) {
 		if(!moving){//if the player is not currently moving
 			if(x.equals("up")) {
+				bird.fatigue();
 				if(bird.yloc <= lane1)//makes sure the player cant go above the screen
 					yIncr = stopMoving;
 				else{
@@ -143,6 +151,7 @@ public class Model implements Serializable{
 				}	
 			}
 			else if (x.equals("down")) {
+				bird.fatigue();
 				if(bird.yloc >= lane4)//makes sure player cant go below the screen
 					yIncr = stopMoving;
 				else{
@@ -157,11 +166,11 @@ public class Model implements Serializable{
 			}
 		}
 	}
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//when there's a dirth of sprites on screen, spawn sprites, based on a balance that makes the map maneuverable.
 	public void spawnObjects() {
-		//if the player is not dead spawn 10 food sprites, 7 obstacles sprites, and 2 nestpiece sprite
+		//if the player is not dead spawn controlled number of elements for each type
 		if(!bird.isDead()) {
-			for(int i = 0; i < 10; i++) {
+			for(int i = 0; i < foodNum; i++) {
 				double temp = randY();
 				if (temp <= lane3) 
 					sprites.add(new Food(randX(), temp, imgs.get(1))); 
@@ -169,7 +178,7 @@ public class Model implements Serializable{
 					sprites.add(new Food(randX(), temp, imgs.get(0))); 
 				
 			}
-			for(int i = 0; i < 7; i++) {
+			for(int i = 0; i < obsNum; i++) {
 				double temp = randY();
 				System.out.println(temp);
 				if (temp <= lane1)
@@ -181,12 +190,13 @@ public class Model implements Serializable{
 				else
 					sprites.add(new Obstacle(randX(), temp, imgs.get(5))); 
 			}
-			for(int i = 0; i < 2; i++) {
+			for(int i = 0; i < nestNum; i++) {
 				sprites.add(new NestPiece(randX(), randY(), imgs.get(6))); 
 			}
 		}
 	}
 	
+	//randomly selects a lane //double//
 	public double randY() { 
 		//randomly choses one of the lanes
 		List<Double> yValue = new ArrayList<>(); 
@@ -198,11 +208,13 @@ public class Model implements Serializable{
         return yValue.get(rand.nextInt(yValue.size())); 
     } 
 	
+	//random generates just offscreen for incoming wave of obs and food
 	public double randX() {
 		//randomly chooses and xcoordinate in the range of screenwidth to screenwidth * 2
         return (Math.random() *((screenSize.width * 2) + 1)) + (offscreenMultiplier * screenSize.width); 
 	}
 
+	//the major updates occur here, collisions called, movement increases, object spawns, and death checks
 	public void updateLocation() {
 		if (!gameOver) {//checks if player reached the nest
 			if(moving){//if the player is mvoeing up or down 
@@ -212,7 +224,7 @@ public class Model implements Serializable{
 					moving = false;			
 				}
 			} 
-			if (levelProgress <= 5) {//there is 5 waves
+			if (levelProgress <= waves) {//there is 5 waves
 				lock = 0;
 				if(!sprites.isEmpty()) {//if there are sprites still on screen
 					Iterator<Sprite> itr = sprites.iterator();
@@ -254,14 +266,15 @@ public class Model implements Serializable{
 				} else {
 					birdDead = true;
 					bird.setDeath(true);
-					/*sprites.clear();
 					levelProgress = 0;
-					lock = 0;
-					bird.energyLevel = 40;*/
+					//lock = 0;
+					//bird.energyLevel = 40;
 				}
 			}
 		}
 	}
+	
+	
 	
 	//rest are getters and setters
 	public Nest getNest() {
